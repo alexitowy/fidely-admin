@@ -1,0 +1,10 @@
+//Contiene variables, mixins, helpers que se usan en multiples componentes
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin box-shadow($color, $blur) {
+    box-shadow: 0 2px $blur rgba($color, 0.1);
+}
