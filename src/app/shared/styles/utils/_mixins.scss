@@ -1,10 +1,15 @@
 //Contiene variables, mixins, helpers que se usan en multiples componentes
-@mixin flex-center {
+@use '../utils/variables' as v;
+
+@mixin flex( $direction: row, $corte: nowrap, $justify: initial, $align: initial ){
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-flow: $direction $corte;
+    justify-content: $justify;
+    align-items: $align;
+    gap: variables.$gap;
 }
 
-@mixin box-shadow($color, $blur) {
-    box-shadow: 0 2px $blur rgba($color, 0.1);
+@mixin box($width, $height){
+    width: calc($width - v.$gap);
+    height: $height;
 }
