@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "assets/layout/styles/layout/layout.css";
+
 @layer tailwind-base, primeng, tailwind-utilities;
 
 @layer tailwind-base {
@@ -9,6 +12,7 @@
   @tailwind components;
   @tailwind utilities;
 }
+
 
 @layer components {
   .label-input{

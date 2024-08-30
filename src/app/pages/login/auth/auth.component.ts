@@ -106,6 +106,6 @@ export class AuthComponent {
   }
 
   navigateToHome(): void {
-    this.router.navigateByUrl('/dashboard/home');
+    this.router.navigateByUrl('/dashboard');
   }
 }
