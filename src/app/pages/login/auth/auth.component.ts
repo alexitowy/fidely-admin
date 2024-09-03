@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { SignInProvider } from '../../../models/enums/singInProvider.enum';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FirebaseAuthenticationService } from '../../../services/firebase-authentication.service';
-import { UtilsService } from '../../../shared/services/utils.service';
 import { UserForm } from '../../../models/interfaces/user.model';
 import { Router } from '@angular/router';
 import { User } from 'firebase/auth';
 import { MessageService } from 'primeng/api';
-import { Message } from 'primeng/api/message';
 import { MessageToast } from '../../../models/enums/messageToast';
+import { EventService } from '../../../core/services/event.service';
 
 @Component({
   selector: 'app-auth',
@@ -20,23 +19,19 @@ export class AuthComponent {
   showLoading: boolean = false;
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.email, Validators.required]),
-    password: new FormControl('', Validators.required),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
   });
 
   constructor(
     private firebaseAuthService: FirebaseAuthenticationService,
-    private utilsService: UtilsService,
     private router: Router,
-    private messageService: MessageService
+    private eventService: EventService
   ) {}
 
   ngOnInit() {}
 
   onSubmit() {}
 
-  presentToast(message: MessageToast) {
-    this.messageService.add(message);
-  }
 
   async signInWith(provider: SignInProvider) {
     this.showLoading = true;
@@ -56,23 +51,18 @@ export class AuthComponent {
           result = await this.firebaseAuthService.signInWithTwitter();
           break;
       }
-      console.log(result);
       this.navigateToHome();
 
-      this.presentToast({
-        detail: `Bienvenido/a ${result.displayName}`,
-        severity: 'success',
-        life: 2000,
-      });
+      this.eventService.presentToastSuccess(`Bienvenido/a ${result.displayName}`);
     } catch (err) {
-      this.presentToast({
-        detail: 'No se ha completado el inicio de sesión.',
-        severity: 'error',
-        life: 2000,
-      });
+      this.eventService.presentToastDanger('No se ha completado el inicio de sesión.');
     } finally {
       this.showLoading = false;
     }
+  }
+
+  TOSTAST(){
+    this.eventService.presentToastDanger('No se ha completado el inicio de sesión.');
   }
 
   send() {
@@ -81,16 +71,13 @@ export class AuthComponent {
 
       this.firebaseAuthService
         .signIn(this.loginForm.value as UserForm)
-        .then(() => {
+        .then((result) => {
           this.loginForm.reset();
           this.navigateToHome();
+          this.eventService.presentToastSuccess(`Bienvenido/a ${result.displayName}`);
         })
         .catch((err) => {
-          this.presentToast({
-            detail: 'Los datos introducidos son incorrectos.',
-            severity: 'error',
-            life: 5000,
-          });
+          this.eventService.presentToastDanger('Los datos introducidos son incorrectos.');
         })
         .finally(() => {
           this.showLoading = false;
@@ -102,7 +89,7 @@ export class AuthComponent {
 
   goToForgotPage() {
     this.loginForm.reset();
-    this.router.navigateByUrl('forgot-password');
+    this.router.navigateByUrl('auth/forgot-password');
   }
 
   navigateToHome(): void {

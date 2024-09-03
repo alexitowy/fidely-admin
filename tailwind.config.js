@@ -62,6 +62,12 @@ module.exports = {
         'xl': '20px',
         '2xl': '24px',
       },
+      fontWeight: {
+        light: '300',
+        normal: '500',
+        bold: '700',
+        extraBold: '900',
+      },
       borderRadius: {
         'none': '0',
         'sm': '5px',

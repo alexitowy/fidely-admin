@@ -7,7 +7,7 @@ export interface MessageToast {
   summary?: string;
   detail?: string;
   id?: any;
-  key?: 'tl' | 'tc' | 'tr' | 'bl' | 'bc' | 'br' | 'center';
+  key?: string;
   life?: number;
   sticky?: boolean;
   closable?: boolean;

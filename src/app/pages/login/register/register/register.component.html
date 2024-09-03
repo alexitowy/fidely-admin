@@ -1,1 +1,140 @@
-<p>register works!</p>
+<div class="min-h-screen flex flex-col items-center justify-center px-4">
+  <div class="w-full max-w-md">
+    <div class="page-title">
+      <h1>Únete a Fidely</h1>
+    </div>
+    <form
+      [formGroup]="registerForm"
+      class="bg-white md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4"
+    >
+      <div class="mb-4">
+        <label class="label-input" for="companyName">Nombre de empresa</label>
+        <input
+          pInputText
+          type="text"
+          placeholder="Nombre de empresa"
+          class="w-full"
+          formControlName="companyName"
+        />
+        <div
+          *ngIf="registerForm.controls['companyName'].errors?.['required'] && registerForm.get('companyName')?.touched"
+          class="mt-2 text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="label-input" for="email">E-mail</label>
+        <input
+          pInputText
+          type="email"
+          placeholder="E-mail"
+          class="w-full"
+          formControlName="email"
+        />
+        <div
+          *ngIf="(registerForm.controls['email'].errors?.['required'] && registerForm.get('email')?.touched)
+            || (registerForm.get('email')?.invalid && registerForm.get('email')?.touched)"
+          class="mt-2 text-danger"
+        >
+          {{registerForm.controls['email'].errors?.['required'] ? 'Este campo es obligatorio.' : 'No es un formato válido.'}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="label-input" for="email">Dirección</label>
+        <input
+          pInputText
+          type="text"
+          placeholder="Dirección"
+          class="w-full"
+          formControlName="location"
+        />
+        <div
+          *ngIf="registerForm.controls['location'].errors?.['required'] && registerForm.get('location')?.touched"
+          class="mt-2 text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="label-input" for="email">CIF</label>
+        <input
+          pInputText
+          type="text"
+          placeholder="CIF"
+          class="w-full"
+          formControlName="cif"
+        />
+        <div
+          *ngIf="registerForm.controls['cif'].errors?.['required'] && registerForm.get('cif')?.touched"
+          class="mt-2 text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="label-input" for="email">CIF</label>
+        <input
+          pInputText
+          type="text"
+          placeholder="CIF"
+          class="w-full"
+          formControlName="cif"
+        />
+        <div
+          *ngIf="registerForm.controls['cif'].errors?.['required'] && registerForm.get('cif')?.touched"
+          class="mt-2 text-danger"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="label-input" for="password">Contraseña</label>
+        <p-password
+          class="w-full block"
+          [feedback]="false"
+          [toggleMask]="true"
+          placeholder="********"
+          promptLabel="Mínimo 8 caracteres"
+          formControlName="password"
+          [minlength]="8"
+        ></p-password>
+        <p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p>
+        <div
+          *ngIf="(registerForm.controls['password'].errors?.['required'] && registerForm.get('password')?.touched)
+          || (registerForm.get('password')?.invalid && registerForm.controls['password'].errors?.['minlength'])"
+          class="mt-2 text-danger"
+        >
+          {{registerForm.controls['password'].errors?.['required'] ? 'Este campo es obligatorio.' : 'La contraseña debe tener mínimo 8 caracteres.'}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="label-input" for="password">Confirmar Contraseña</label>
+        <p-password
+          class="w-full block"
+          [feedback]="false"
+          placeholder="********"
+          formControlName="confirmPassword"
+        ></p-password>
+        <div
+          *ngIf="(registerForm.controls['confirmPassword'].errors?.['required'] && registerForm.get('confirmPassword')?.touched)
+            || (registerForm.get('confirmPassword').value !== registerForm.get('confirmPassword').value) && registerForm.get('confirmPassword')?.touched"
+          class="mt-2 text-danger"
+        >
+          {{registerForm.controls['confirmPassword'].errors?.['required'] ? 'Este campo es obligatorio.' : 'Las contraseñas deben coincidir'}}
+        </div>
+      </div>
+    </form>
+
+    <div class="flex items-center justify-between">
+      <button
+        pButton
+        type="submit"
+        (click)="register()"
+        label="Registrarse"
+        class="bg-primary border-primary-shade w-full"
+      ></button>
+    </div>
+    <app-loading [show]="showLoading"></app-loading>
+  </div>
+</div>

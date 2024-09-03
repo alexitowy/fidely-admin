@@ -1,31 +1,32 @@
 import { Injectable } from '@angular/core';
-import { MessageService } from 'primeng/api';
-import { Message } from 'primeng/api/message';
+import { Subject } from 'rxjs';
+import { MessageToast } from '../../models/enums/messageToast';
+import { Message } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UtilsService {
-  constructor(private messageService: MessageService) {}
+export class EventService {
+  toast$ = new Subject<MessageToast>();
 
-  presentToast(message: Message) {
-    this.messageService.add(message);
+  constructor() {}
+
+  presentToast(message: MessageToast) {
+    this.toast$.next(message);
   }
 
   presentToastDanger(
     detail: string,
-    duration = 7000,
-    position: 'tl' | 'tc' | 'tr' | 'bl' | 'bc' | 'br' | 'center' = 'tr',
+    duration = 5000,
     title?: string,
     icon?: string,
     closable?: boolean
   ) {
-    console.log('entra a mostrar')
     this.presentToast({
       severity: 'error',
       detail,
       life: duration,
-      key: position,
+      key: 'br',
       summary: title,
       icon,
       closable,
@@ -34,17 +35,15 @@ export class UtilsService {
 
   presentToastWarning(
     detail: string,
-    duration = 1500,
-    position: 'tl' | 'tc' | 'tr' | 'bl' | 'bc' | 'br' | 'center' = 'br',
+    duration = 2000,
     title?: string,
     icon?: string,
     closable?: boolean
   ) {
     this.presentToast({
-      severity: 'warning',
+      severity: 'warn',
       detail,
       life: duration,
-      key: position,
       summary: title,
       icon,
       closable,
@@ -53,8 +52,7 @@ export class UtilsService {
 
   presentToastInfo(
     detail: string,
-    duration = 1500,
-    position: 'tl' | 'tc' | 'tr' | 'bl' | 'bc' | 'br' | 'center' = 'br',
+    duration = 3000,
     title?: string,
     icon?: string,
     closable?: boolean
@@ -63,7 +61,6 @@ export class UtilsService {
       severity: 'info',
       detail,
       life: duration,
-      key: position,
       summary: title,
       icon,
       closable,
@@ -73,7 +70,6 @@ export class UtilsService {
   presentToastSuccess(
     detail: string,
     duration = 2000,
-    position: 'tl' | 'tc' | 'tr' | 'bl' | 'bc' | 'br' | 'center' = 'br',
     title?: string,
     icon?: string,
     closable?: boolean
@@ -82,7 +78,6 @@ export class UtilsService {
       severity: 'success',
       detail,
       life: duration,
-      key: position,
       summary: title,
       icon,
       closable,

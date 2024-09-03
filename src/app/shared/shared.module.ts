@@ -13,6 +13,7 @@ import { MenuModule } from 'primeng/menu';
 import { TableModule } from 'primeng/table';
 import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,6 @@ import { PanelMenuModule } from 'primeng/panelmenu';
     ReactiveFormsModule,
     ProgressSpinnerModule,
     DialogModule,
-    ToastModule,
     ButtonModule,
     PasswordModule,
     InputTextModule,
@@ -38,7 +38,6 @@ import { PanelMenuModule } from 'primeng/panelmenu';
     LoadingComponent,
     ButtonModule,
     DialogModule,
-    ToastModule,
     PasswordModule,
     InputTextModule,
     ProgressSpinnerModule,
@@ -47,6 +46,6 @@ import { PanelMenuModule } from 'primeng/panelmenu';
     TableModule,
     StyleClassModule,
     PanelMenuModule,
-  ],
+  ]
 })
 export class SharedModule { }

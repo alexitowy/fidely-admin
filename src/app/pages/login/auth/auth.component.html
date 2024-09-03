@@ -2,60 +2,123 @@
   <div class="w-full max-w-md">
     <!-- Icono o logo -->
     <div class="flex justify-center mb-4">
-      <img src="assets/icons/logo.png" alt="Logo" class="w-24 h-24"/>
+      <img src="assets/icons/logo.png" alt="Logo" class="w-24 h-24" />
     </div>
-
     <!-- Formulario de inicio de sesión -->
-    <form [formGroup]="loginForm" class="bg-white md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4">
+    <form
+      [formGroup]="loginForm"
+      class="bg-white md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4"
+    >
       <div class="mb-4">
-        <label class="label-input" for="email">
-          E-mail
-        </label>
-        <input pInputText type="text" placeholder="E-mail" class="w-full" formControlName="email"/>
+        <label class="label-input" for="email"> E-mail </label>
+        <input
+          pInputText
+          type="text"
+          placeholder="E-mail"
+          class="w-full"
+          formControlName="email"
+        />
+        <div
+          *ngIf="(loginForm.controls['email'].errors?.['required'] && loginForm.get('email')?.touched)
+          || (loginForm.get('email')?.invalid && loginForm.get('email')?.touched)"
+          class="mt-2 text-danger"
+        >
+          {{loginForm.controls['email'].errors?.['required'] ? 'Este campo es obligatorio.' : 'No es un formato válido.'}}
+        </div>
       </div>
       <div class="mb-4">
-        <label class="label-input" for="password">
-          Contraseña
-        </label>
-        <p-password class="w-full block" [feedback]="false" [toggleMask]="true" placeholder="********" promptLabel="Mínimo 8 caracteres" formControlName="password"></p-password>
+        <label class="label-input" for="password"> Contraseña </label>
+        <p-password
+          class="w-full block"
+          [feedback]="false"
+          [toggleMask]="true"
+          placeholder="********"
+          promptLabel="Mínimo 8 caracteres"
+          formControlName="password"
+          [minlength]="8"
+        ></p-password>
         <p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p>
+        <div
+          *ngIf="(loginForm.controls['password'].errors?.['required'] && loginForm.get('password')?.touched)
+          || (loginForm.get('password')?.invalid && loginForm.controls['password'].errors?.['minlength'])"
+          class="mt-2 text-danger"
+        >
+        {{loginForm.controls['password'].errors?.['required'] ? 'Este campo es obligatorio.' : 'La contraseña debe tener mínimo 8 caracteres.'}}
+        </div>
       </div>
     </form>
 
-      <div class="flex items-center justify-between">
-        <button pButton type="submit" (click)="send()" label="Iniciar sesión" class="bg-primary border-primary-shade w-full"></button>
-      </div>
+    <div class="flex items-center justify-between">
+      <button
+        pButton
+        type="submit"
+        (click)="send()"
+        label="Iniciar sesión"
+        class="bg-primary border-primary-shade w-full"
+      ></button>
+    </div>
 
-      <div class="flex justify-center mt-4">
-        <a (click)="goToForgotPage()" class="inline-block align-baseline font-bold text-sm text-links">
-          ¿Olvidó su contraseña?
-        </a>
-      </div>
+    <div class="flex justify-center mt-4">
+      <a
+        (click)="goToForgotPage()"
+        class="inline-block align-baseline font-bold text-sm text-links"
+      >
+        ¿Olvidó su contraseña?
+      </a>
+    </div>
 
-      <div class="flex items-center my-4">
-        <div class="flex-grow border-t border-gray-700"></div>
-        <span class="px-2 text-gray-500">o</span>
-        <div class="flex-grow border-t border-gray-700"></div>
-      </div>
+    <div class="flex items-center my-4">
+      <div class="flex-grow border-t border-gray-700"></div>
+      <span class="px-2 text-gray-500">o</span>
+      <div class="flex-grow border-t border-gray-700"></div>
+    </div>
 
-      <!-- Botones de inicio de sesión social -->
-      <div class="mb-4">
-        <button pButton type="button" (click)="signInWith(providers.google)" icon="pi pi-google" label="Continuar con Google" class="w-full p-button-outlined text-secondary"></button>
-      </div>
-      <div class="mb-4">
-        <button pButton type="button" (click)="signInWith(providers.facebook)" icon="pi pi-facebook" label="Continuar con Facebook" class="w-full p-button-outlined text-secondary"></button>
-      </div>
-      <div class="mb-4">
-        <button pButton type="button" (click)="signInWith(providers.twitter)" icon="pi pi-twitter" label="Continuar con Twitter" class="w-full p-button-outlined text-secondary"></button>
-      </div>
-      <div class="mb-4">
-        <button pButton type="button" (click)="signInWith(providers.apple)" icon="pi pi-apple" label="Continuar con Apple" class="w-full p-button-secondary bg-secondary"></button>
-      </div>
+    <!-- Botones de inicio de sesión social -->
+    <div class="mb-4">
+      <button
+        pButton
+        type="button"
+        (click)="signInWith(providers.google)"
+        icon="pi pi-google"
+        label="Continuar con Google"
+        class="w-full p-button-outlined text-secondary"
+      ></button>
+    </div>
+    <div class="mb-4">
+      <button
+        pButton
+        type="button"
+        (click)="signInWith(providers.facebook)"
+        icon="pi pi-facebook"
+        label="Continuar con Facebook"
+        class="w-full p-button-outlined text-secondary"
+      ></button>
+    </div>
+    <div class="mb-4">
+      <button
+        pButton
+        type="button"
+        (click)="signInWith(providers.twitter)"
+        icon="pi pi-twitter"
+        label="Continuar con Twitter"
+        class="w-full p-button-outlined text-secondary"
+      ></button>
+    </div>
+    <div class="mb-4">
+      <button
+        pButton
+        type="button"
+        (click)="signInWith(providers.apple)"
+        icon="pi pi-apple"
+        label="Continuar con Apple"
+        class="w-full p-button-secondary bg-secondary"
+      ></button>
+    </div>
 
     <div class="text-center">
       <p class="text-gray-600 text-sm">
         ¿No tienes una cuenta?
-        <a routerLink="/register" class="text-links font-bold">Regístrate</a>
+        <a routerLink="/auth/register" class="text-links font-bold">Regístrate</a>
       </p>
     </div>
     <app-loading [show]="showLoading"></app-loading>

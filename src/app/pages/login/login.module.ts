@@ -6,18 +6,22 @@ import { LoginRoutingModule } from './login-routing.module';
 import { MessageService } from 'primeng/api';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { RegisterComponent } from './register/register/register.component';
 
 
 @NgModule({
   declarations: [
-    AuthComponent
+    AuthComponent,
+    ResetPasswordComponent,
+    RegisterComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
-    LoginRoutingModule,
+    LoginRoutingModule
   ]
 })
 export class LoginModule { }

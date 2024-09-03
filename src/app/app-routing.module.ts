@@ -9,16 +9,17 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: AppLayoutComponent,
-    children: [
-      { path: '', loadChildren: () => import('./pages/dashboard/dashboard/dashboard.module').then(m => m.DashboardModule) },
-    ],
+    loadChildren: () =>
+      import('./pages/dashboard/dashboard/dashboard.module').then(
+        (m) => m.DashboardModule
+      ),
     canActivate: [authGuard],
   },
   {
     path: 'auth',
     loadChildren: () =>
       import('./pages/login/login.module').then((m) => m.LoginModule),
-    canActivate: [noAuthGuard]
+    canActivate: [noAuthGuard],
   },
   {
     path: '**',
