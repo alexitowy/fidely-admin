@@ -74,6 +74,9 @@ module.exports = {
         'DEFAULT': '10px',
         'md': '15px',
         'lg': '20px',
+      },
+      boxShadow: {
+        'custom-light': '0px 4px 6px 3px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
       }
     },
   },

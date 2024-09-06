@@ -8,21 +8,32 @@ import {
   GoogleAuthProvider,
   User,
   sendPasswordResetEmail,
+  createUserWithEmailAndPassword,
+  updateProfile, signOut
 } from 'firebase/auth';
-import { UserForm } from '../models/interfaces/user.model';
+import { Company } from '../models/interfaces/user.model';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { getFirestore, setDoc, getDoc, doc, addDoc, collection, query, collectionData } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseAuthenticationService {
-  constructor(private readonly auth: AngularFireAuth) {}
+  constructor(
+    private readonly auth: AngularFireAuth,
+    private readonly firestore: AngularFirestore
+  ) {}
 
   facebookProvider = new FacebookAuthProvider();
   twitterProvider = new TwitterAuthProvider();
   googleProvider = new GoogleAuthProvider();
 
   //===== Authentication ===========
-  async signIn(user: UserForm) {
+  getAuth(){
+    return getAuth();
+  }
+
+  async signIn(user: Company) {
     return (
       await signInWithEmailAndPassword(getAuth(), user.email, user.password)
     ).user;
@@ -64,7 +75,41 @@ export class FirebaseAuthenticationService {
     }
   }
 
-  public async resetPassword(email: string): Promise<void> {
-    return await sendPasswordResetEmail(getAuth(), email);
+  async signOut(){
+    await signOut(getAuth());
   }
+
+  resetPassword(email: string): Promise<void> {
+    return sendPasswordResetEmail(getAuth(), email);
+  }
+
+  updateUser(user: Company){
+    return updateProfile(getAuth().currentUser, { displayName:user.companyName});
+  }
+
+  async register(user: Company) {
+    return (
+      await createUserWithEmailAndPassword(getAuth(), user.email, user.password)
+    ).user;
+  }
+
+  //======== Database =============
+  //======== setDocument =========
+  setDocument(path: string, data: any){
+    return setDoc(doc(getFirestore(), path), data);
+  }
+
+  addDocument(path: string, data: any){
+    return addDoc(collection(getFirestore(), path), data);
+  }
+
+  async getDocument(path: string){
+    return (await getDoc(doc(getFirestore(), path))).data();
+  }
+
+  getCollection(path: string, collectionQuery?: any){
+    const ref = collection(getFirestore(), path);
+    return collectionData(query(ref, collectionQuery));
+  }
+
 }

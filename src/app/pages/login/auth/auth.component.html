@@ -7,7 +7,7 @@
     <!-- Formulario de inicio de sesión -->
     <form
       [formGroup]="loginForm"
-      class="bg-white md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4"
+      class="bg-white md:shadow-custom-light rounded md:px-8 md:pt-6 md:pb-6 md:mb-4"
     >
       <div class="mb-4">
         <label class="label-input" for="email"> E-mail </label>
@@ -17,6 +17,7 @@
           placeholder="E-mail"
           class="w-full"
           formControlName="email"
+          id="email"
         />
         <div
           *ngIf="(loginForm.controls['email'].errors?.['required'] && loginForm.get('email')?.touched)

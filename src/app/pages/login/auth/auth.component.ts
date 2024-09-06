@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SignInProvider } from '../../../models/enums/singInProvider.enum';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FirebaseAuthenticationService } from '../../../services/firebase-authentication.service';
-import { UserForm } from '../../../models/interfaces/user.model';
+import { Company } from '../../../models/interfaces/user.model';
 import { Router } from '@angular/router';
 import { User } from 'firebase/auth';
 import { MessageService } from 'primeng/api';
@@ -61,16 +61,12 @@ export class AuthComponent {
     }
   }
 
-  TOSTAST(){
-    this.eventService.presentToastDanger('No se ha completado el inicio de sesión.');
-  }
-
   send() {
     if (this.loginForm.valid) {
       this.showLoading = true;
 
       this.firebaseAuthService
-        .signIn(this.loginForm.value as UserForm)
+        .signIn(this.loginForm.value as Company)
         .then((result) => {
           this.loginForm.reset();
           this.navigateToHome();

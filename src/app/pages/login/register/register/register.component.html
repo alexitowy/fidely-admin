@@ -15,6 +15,7 @@
           placeholder="Nombre de empresa"
           class="w-full"
           formControlName="companyName"
+          id="confirmEmail"
         />
         <div
           *ngIf="registerForm.controls['companyName'].errors?.['required'] && registerForm.get('companyName')?.touched"
@@ -31,6 +32,7 @@
           placeholder="E-mail"
           class="w-full"
           formControlName="email"
+          id="email"
         />
         <div
           *ngIf="(registerForm.controls['email'].errors?.['required'] && registerForm.get('email')?.touched)
@@ -48,6 +50,7 @@
           placeholder="Dirección"
           class="w-full"
           formControlName="location"
+          id="location"
         />
         <div
           *ngIf="registerForm.controls['location'].errors?.['required'] && registerForm.get('location')?.touched"
@@ -64,6 +67,7 @@
           placeholder="CIF"
           class="w-full"
           formControlName="cif"
+          id="cif"
         />
         <div
           *ngIf="registerForm.controls['cif'].errors?.['required'] && registerForm.get('cif')?.touched"
@@ -73,16 +77,39 @@
         </div>
       </div>
       <div class="mb-4">
-        <label class="label-input" for="email">CIF</label>
-        <input
-          pInputText
-          type="text"
-          placeholder="CIF"
-          class="w-full"
-          formControlName="cif"
-        />
+        <label class="label-input" for="category">Categoria</label>
+        <p-dropdown
+          [options]="categories"
+          optionLabel="category"
+          [filter]="true"
+          filterBy="category"
+          [showClear]="true"
+          placeholder="Seleccione una categoria"
+          formControlName="category"
+          styleClass="w-full"
+          id="category"
+        >
+          <ng-template pTemplate="selectedItem" let-category>
+            <div class="flex align-items-center gap-2">
+              <img
+                src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                style="width: 18px"
+              />
+              <div>{{ category.name }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-category pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <img
+                src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                style="width: 18px"
+              />
+              <div>{{ category.name }}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
         <div
-          *ngIf="registerForm.controls['cif'].errors?.['required'] && registerForm.get('cif')?.touched"
+          *ngIf="registerForm.controls['category'].errors?.['required'] && registerForm.get('category')?.touched"
           class="mt-2 text-danger"
         >
           Este campo es obligatorio.
@@ -106,22 +133,6 @@
           class="mt-2 text-danger"
         >
           {{registerForm.controls['password'].errors?.['required'] ? 'Este campo es obligatorio.' : 'La contraseña debe tener mínimo 8 caracteres.'}}
-        </div>
-      </div>
-      <div class="mb-4">
-        <label class="label-input" for="password">Confirmar Contraseña</label>
-        <p-password
-          class="w-full block"
-          [feedback]="false"
-          placeholder="********"
-          formControlName="confirmPassword"
-        ></p-password>
-        <div
-          *ngIf="(registerForm.controls['confirmPassword'].errors?.['required'] && registerForm.get('confirmPassword')?.touched)
-            || (registerForm.get('confirmPassword').value !== registerForm.get('confirmPassword').value) && registerForm.get('confirmPassword')?.touched"
-          class="mt-2 text-danger"
-        >
-          {{registerForm.controls['confirmPassword'].errors?.['required'] ? 'Este campo es obligatorio.' : 'Las contraseñas deben coincidir'}}
         </div>
       </div>
     </form>

@@ -1,5 +1,26 @@
-import { CanActivateFn } from '@angular/router';
+import { inject, Injectable } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { FirebaseAuthenticationService } from '../../services/firebase-authentication.service';
 
-export const authGuard: CanActivateFn = (route, state) => {
-  return true;
-};
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard {
+  constructor(
+    private readonly firebaseAuthService: FirebaseAuthenticationService,
+    private router: Router,
+  ) {}
+
+  public async canActivate(): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.firebaseAuthService.getAuth().onAuthStateChanged((auth) => {
+        if (auth) {
+          resolve(true);
+        } else {
+          this.router.navigateByUrl('auth');
+          resolve(false);
+        }
+      });
+    });
+  }
+}

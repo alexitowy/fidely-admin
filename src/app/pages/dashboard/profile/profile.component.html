@@ -1,0 +1,279 @@
+<div class="container mx-auto p-4">
+  <!-- Formulario de actualización de perfil -->
+  <div class="bg-white md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4">
+    <h2 class="text-2xl font-semibold mb-4">Perfil del Negocio</h2>
+
+    <form [formGroup]="profileForm" *ngIf="profileData">
+      <!-- Nombre del negocio -->
+      <div class="mb-4">
+        <label class="label-input">Nombre del Negocio</label>
+        <input
+          pInputText
+          class="w-full"
+          formControlName="companyName"
+          type="text"
+          placeholder="Nombre del negocio"
+          id="companyName"
+        />
+      </div>
+
+      <!-- Descripción -->
+      <div class="mb-4">
+        <label class="label-input">Descripción del Negocio</label>
+        <textarea
+          pInputTextarea
+          class="w-full"
+          formControlName="description"
+          rows="4"
+          placeholder="Descripción del negocio"
+          id="description"
+        ></textarea>
+      </div>
+
+      <!-- Logo del negocio -->
+      <div class="mb-4">
+        <label class="label-input">Logo del Negocio</label>
+        <div class="flex items-center flex-col">
+          <p-avatar
+            *ngIf="!logoPreview"
+            icon="pi pi-image"
+            styleClass="w-24 h-24 mb-4"
+            size="xlarge"
+            shape="circle"
+          />
+          <img
+            *ngIf="logoPreview"
+            [src]="logoPreview"
+            alt="Logo Preview"
+            class="mt-2 mb-4 w-24 h-24 rounded-full border-4 border-gray-300 object-cover"
+          />
+          <p-fileUpload
+            mode="basic"
+            chooseLabel="Choose"
+            chooseIcon="pi pi-upload"
+            name="logo"
+            accept="image/*"
+            maxFileSize="1000000"
+            customUpload="true"
+            [auto]="true"
+            #logoUploader
+            (uploadHandler)="onFileSelected($event, 'logo')"
+          />
+        </div>
+      </div>
+
+      <!-- Banner del negocio -->
+      <div class="mb-4">
+        <label class="label-input">Banner del Negocio</label>
+        <div class="flex items-center flex-col">
+          <img
+            *ngIf="!bannerPreview"
+            src="https://placehold.jp/30/e5e7eb/ffffff/300x150.png?text=banner"
+            alt="Banner Preview"
+            class="mt-2 mb-4 w-full h-48 object-cover rounded-md"
+          />
+          <img
+            *ngIf="bannerPreview"
+            [src]="bannerPreview"
+            alt="Banner Preview"
+            class="mt-2 mb-4 w-full h-48 object-cover rounded-md"
+          />
+          <p-fileUpload
+            mode="basic"
+            chooseLabel="Choose"
+            chooseIcon="pi pi-upload"
+            name="banner"
+            accept="image/*"
+            maxFileSize="1000000"
+            customUpload="true"
+            [auto]="true"
+            #bannerUploader
+            (uploadHandler)="onFileSelected($event, 'banner')"
+          />
+        </div>
+      </div>
+
+      <!-- Horarios -->
+      <div class="mb-4">
+        <label class="label-input">Horarios</label>
+        <ng-container formArrayName="schedule">
+          <div
+            *ngFor="let horario of schedule.controls; let i = index"
+            class="flex mb-2"
+          >
+            <input
+              pInputText
+              class="w-full flex-grow"
+              [formControlName]="i"
+              type="text"
+              placeholder="Horario de atención"
+            />
+            <button
+              pButton
+              type="button"
+              icon="pi pi-times"
+              class="ml-2"
+              (click)="removeHorario(i)"
+            >
+            </button>
+          </div>
+        </ng-container>
+        <button
+          pButton
+          type="button"
+          class="btn-secondary"
+          (click)="addHorario()"
+        >
+          + Agregar horario
+        </button>
+      </div>
+
+      <!-- Direcciones -->
+      <div class="mb-4">
+        <label class="label-input">Dirección Principal</label>
+        <input
+          pInputText
+          class="w-full"
+          formControlName="defaultAddress"
+          type="text"
+          placeholder="Dirección principal"
+        />
+      </div>
+      <div class="mb-4">
+        <label class="label-input">Agregar más direcciones</label>
+        <ng-container formArrayName="additionalAddresses">
+          <div
+            *ngFor="let address of additionalAddresses.controls; let i = index"
+            class="flex mb-2"
+          >
+            <input
+              pInputText
+              class="w-full flex-grow"
+              [formControlName]="i"
+              type="text"
+              placeholder="Dirección adicional"
+            />
+            <button
+              pButton
+              icon="pi pi-times"
+              type="button"
+              class="ml-2"
+              (click)="removeAddress(i)"
+            ></button>
+          </div>
+        </ng-container>
+        <button
+          pButton
+          type="button"
+          class="btn-secondary"
+          (click)="addAddress()"
+        >
+          + Agregar dirección
+        </button>
+      </div>
+
+      <!-- Teléfonos -->
+      <div class="mb-4">
+        <label class="label-input">Teléfonos</label>
+        <ng-container formArrayName="phones">
+          <div
+            *ngFor="let phone of phones.controls; let i = index"
+            class="flex mb-2"
+          >
+            <input
+              pInputText
+              class="w-full flex-grow"
+              [formControlName]="i"
+              type="text"
+              placeholder="Número de teléfono"
+            />
+            <button
+              pButton
+              icon="pi pi-times"
+              type="button"
+              class="ml-2"
+              (click)="removePhone(i)"
+            ></button>
+          </div>
+        </ng-container>
+        <button
+          pButton
+          type="button"
+          class="btn-secondary"
+          (click)="addPhone()"
+        >
+          + Agregar teléfono
+        </button>
+      </div>
+      <!-- Botón de Guardar -->
+      <div class="text-right">
+        <button
+          pButton
+          type="submit"
+          class="bg-primary border-primary-shade w-full"
+          [disabled]="profileForm.invalid"
+        >
+          Guardar Cambios
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="bg-white mt-4 md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4">
+    <h3 class="text-xl font-semibold mb-2">Crear Perfil de Empleado</h3>
+    <form
+      [formGroup]="employeeForm"
+      class="bg-white md:shadow-custom-light rounded md:px-8 md:pt-6 md:pb-6 md:mb-4"
+    >
+      <div class="mb-4">
+        <label class="label-input" for="employeeEmail"> E-mail </label>
+        <input
+          pInputText
+          type="text"
+          placeholder="E-mail"
+          class="w-full"
+          formControlName="employeeEmail"
+          id="employeeEmail"
+        />
+        <div
+          *ngIf="(employeeForm.controls['employeeEmail'].errors?.['required'] && employeeForm.get('employeeEmail')?.touched)
+            || (employeeForm.get('employeeEmail')?.invalid && employeeForm.get('employeeEmail')?.touched)"
+          class="mt-2 text-danger"
+        >
+          {{employeeForm.controls['employeeEmail'].errors?.['required'] ? 'Este campo es obligatorio.' : 'No es un formato válido.'}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="label-input" for="password">Contraseña</label>
+        <p-password
+          class="w-full block"
+          [feedback]="false"
+          [toggleMask]="true"
+          placeholder="********"
+          promptLabel="Mínimo 8 caracteres"
+          formControlName="password"
+          [minlength]="8"
+        ></p-password>
+        <p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p>
+        <div
+          *ngIf="(employeeForm.controls['password'].errors?.['required'] && employeeForm.get('password')?.touched)
+            || (employeeForm.get('password')?.invalid && employeeForm.controls['password'].errors?.['minlength'])"
+          class="mt-2 text-danger"
+        >
+          {{employeeForm.controls['password'].errors?.['required'] ? 'Este campo es obligatorio.' : 'La contraseña debe tener mínimo 8 caracteres.'}}
+        </div>
+      </div>
+    </form>
+
+    <div class="flex items-center justify-between">
+      <button
+        pButton
+        type="submit"
+        (click)="send()"
+        label="Guardar"
+        class="bg-primary border-primary-shade w-full"
+      ></button>
+    </div>
+  </div>
+  <app-loading [show]="showLoading"></app-loading>
+</div>
