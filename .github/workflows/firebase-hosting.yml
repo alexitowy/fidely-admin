@@ -1,0 +1,46 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - preproduction
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: |
+        if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+          npm run build:production
+        elif [[ ${{ github.ref }} == 'refs/heads/develop' ]]; then
+          npm run build:develop
+        elif [[ ${{ github.ref }} == 'refs/heads/preProduction' ]]; then
+          npm run build:preProduction
+        fi
+
+    - name: Deploy
+      env:
+        FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
+      run: |
+        if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+          npm run deploy:production
+        elif [[ ${{ github.ref }} == 'refs/heads/develop' ]]; then
+          npm run deploy:develop
+        elif [[ ${{ github.ref }} == 'refs/heads/preproduction' ]]; then
+          npm run deploy:preproduction
+        fi
