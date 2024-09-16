@@ -10,4 +10,9 @@ export class UtilsService {
   get chartSize() {
     return this.layoutService.isMobile() ? '200px' : '350px';
   }
+
+  isDataURL(str: string): boolean {
+    const regex = /^\s*data:([a-z]+\/[a-z0-9-+.]+)?(;base64)?,[a-z0-9!$&',()*+;=\-._~:@\/?%\s]*\s*$/i;
+    return !!str.match(regex);
+  }
 }

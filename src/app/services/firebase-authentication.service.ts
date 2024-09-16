@@ -9,11 +9,30 @@ import {
   User,
   sendPasswordResetEmail,
   createUserWithEmailAndPassword,
-  updateProfile, signOut
+  updateProfile,
+  signOut,
 } from 'firebase/auth';
 import { Company } from '../models/interfaces/user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { getFirestore, setDoc, getDoc, doc, addDoc, collection, query, collectionData } from '@angular/fire/firestore';
+import {
+  getFirestore,
+  setDoc,
+  getDoc,
+  doc,
+  addDoc,
+  collection,
+  query,
+  updateDoc,
+  getDocs,
+} from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import {
+  uploadString,
+  getStorage,
+  ref,
+  getDownloadURL,
+} from 'firebase/storage';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +40,8 @@ import { getFirestore, setDoc, getDoc, doc, addDoc, collection, query, collectio
 export class FirebaseAuthenticationService {
   constructor(
     private readonly auth: AngularFireAuth,
-    private readonly firestore: AngularFirestore
+    private readonly firestore: AngularFirestore,
+    private readonly storage: AngularFireStorage
   ) {}
 
   facebookProvider = new FacebookAuthProvider();
@@ -29,7 +49,7 @@ export class FirebaseAuthenticationService {
   googleProvider = new GoogleAuthProvider();
 
   //===== Authentication ===========
-  getAuth(){
+  getAuth() {
     return getAuth();
   }
 
@@ -75,7 +95,7 @@ export class FirebaseAuthenticationService {
     }
   }
 
-  async signOut(){
+  async signOut() {
     await signOut(getAuth());
   }
 
@@ -83,8 +103,10 @@ export class FirebaseAuthenticationService {
     return sendPasswordResetEmail(getAuth(), email);
   }
 
-  updateUser(user: Company){
-    return updateProfile(getAuth().currentUser, { displayName:user.companyName});
+  updateUser(user: Company) {
+    return updateProfile(getAuth().currentUser, {
+      displayName: user.companyName,
+    });
   }
 
   async register(user: Company) {
@@ -95,21 +117,43 @@ export class FirebaseAuthenticationService {
 
   //======== Database =============
   //======== setDocument =========
-  setDocument(path: string, data: any){
+  setDocument(path: string, data: any) {
     return setDoc(doc(getFirestore(), path), data);
   }
 
-  addDocument(path: string, data: any){
+  updateDocument(path: string, data: any) {
+    return updateDoc(doc(getFirestore(), path), data);
+  }
+
+  addDocument(path: string, data: any) {
     return addDoc(collection(getFirestore(), path), data);
   }
 
-  async getDocument(path: string){
+  async getDocument(path: string) {
     return (await getDoc(doc(getFirestore(), path))).data();
   }
 
-  getCollection(path: string, collectionQuery?: any){
+  async getCollection(path: string, collectionQuery?: any) {
     const ref = collection(getFirestore(), path);
-    return collectionData(query(ref, collectionQuery));
+    const q = query(ref, collectionQuery);
+
+    // Obtener los documentos de la colección
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      const id = doc.id;
+      return { id, ...data };
+    });
   }
 
+  //========= Almacenamiento =================
+  //===== Subir imagen ==========
+  async uploadImage(path: string, data_url: string) {
+    const storageRef = ref(getStorage(), path);
+    await uploadString(storageRef, data_url, 'data_url');
+    return getDownloadURL(storageRef);
+  }
+
+  getFilePath() {}
 }

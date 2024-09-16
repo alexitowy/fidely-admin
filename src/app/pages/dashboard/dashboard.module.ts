@@ -14,6 +14,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { AvatarModule } from 'primeng/avatar';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { AvatarModule } from 'primeng/avatar';
     ButtonModule,
     InputTextareaModule,
     FileUploadModule,
-    AvatarModule
+    AvatarModule,
+    InputMaskModule
   ],
 })
 export class DashboardModule { }

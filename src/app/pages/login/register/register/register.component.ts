@@ -50,7 +50,7 @@ export class RegisterComponent {
       uid: [''],
       companyName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      location: ['', Validators.required],
+      defaultAddress: ['', Validators.required],
       cif: ['', Validators.required],
       category: [null, Validators.required],
       password: ['', [Validators.required, Validators.minLength(8)]],

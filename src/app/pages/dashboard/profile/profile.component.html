@@ -1,9 +1,9 @@
-<div class="container mx-auto p-4">
+<div class="container mx-auto">
   <!-- Formulario de actualización de perfil -->
   <div class="bg-white md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4">
     <h2 class="text-2xl font-semibold mb-4">Perfil del Negocio</h2>
 
-    <form [formGroup]="profileForm" *ngIf="profileData">
+    <form [formGroup]="profileForm" *ngIf="profileForm">
       <!-- Nombre del negocio -->
       <div class="mb-4">
         <label class="label-input">Nombre del Negocio</label>
@@ -35,15 +35,15 @@
         <label class="label-input">Logo del Negocio</label>
         <div class="flex items-center flex-col">
           <p-avatar
-            *ngIf="!logoPreview"
+            *ngIf="!profileForm.value.logo"
             icon="pi pi-image"
             styleClass="w-24 h-24 mb-4"
             size="xlarge"
             shape="circle"
           />
           <img
-            *ngIf="logoPreview"
-            [src]="logoPreview"
+            *ngIf="profileForm.value.logo"
+            [src]="profileForm.value.logo"
             alt="Logo Preview"
             class="mt-2 mb-4 w-24 h-24 rounded-full border-4 border-gray-300 object-cover"
           />
@@ -67,14 +67,14 @@
         <label class="label-input">Banner del Negocio</label>
         <div class="flex items-center flex-col">
           <img
-            *ngIf="!bannerPreview"
+            *ngIf="!profileForm.value.banner"
             src="https://placehold.jp/30/e5e7eb/ffffff/300x150.png?text=banner"
             alt="Banner Preview"
             class="mt-2 mb-4 w-full h-48 object-cover rounded-md"
           />
           <img
-            *ngIf="bannerPreview"
-            [src]="bannerPreview"
+            *ngIf="profileForm.value.banner"
+            [src]="profileForm.value.banner"
             alt="Banner Preview"
             class="mt-2 mb-4 w-full h-48 object-cover rounded-md"
           />
@@ -96,26 +96,39 @@
       <!-- Horarios -->
       <div class="mb-4">
         <label class="label-input">Horarios</label>
-        <ng-container formArrayName="schedule">
+        <ng-container formArrayName="timeTables">
           <div
-            *ngFor="let horario of schedule.controls; let i = index"
-            class="flex mb-2"
+            *ngFor="let horario of timeTables.controls; let i = index"
+            [formGroupName]="i"
+            class="flex mb-3 p-1 border-line"
           >
-            <input
-              pInputText
-              class="w-full flex-grow"
-              [formControlName]="i"
-              type="text"
-              placeholder="Horario de atención"
-            />
-            <button
-              pButton
-              type="button"
-              icon="pi pi-times"
-              class="ml-2"
-              (click)="removeHorario(i)"
-            >
-            </button>
+            <div>
+              <input
+                pInputText
+                class="w-full mb-2"
+                formControlName="day"
+                type="text"
+                placeholder="Día"
+              />
+              <input
+                pInputText
+                class="w-full"
+                formControlName="hour"
+                type="text"
+                placeholder="Horario"
+              />
+            </div>
+            <div class="flex flex-col justify-center">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-times"
+                [rounded]="true"
+                [text]="true"
+                class="ml-2 w-6"
+                (click)="removeHorario(i)"
+              ></button>
+            </div>
           </div>
         </ng-container>
         <button
@@ -158,6 +171,8 @@
               icon="pi pi-times"
               type="button"
               class="ml-2"
+              [rounded]="true"
+              [text]="true"
               (click)="removeAddress(i)"
             ></button>
           </div>
@@ -192,6 +207,8 @@
               icon="pi pi-times"
               type="button"
               class="ml-2"
+              [rounded]="true"
+              [text]="true"
               (click)="removePhone(i)"
             ></button>
           </div>
@@ -205,23 +222,66 @@
           + Agregar teléfono
         </button>
       </div>
-      <!-- Botón de Guardar -->
+      <div class="mb-4">
+        <label class="label-input">Galeria de imágenes</label>
+        <div class="grid grid-cols-2 gap-4">
+          <ng-container *ngFor="let image of profileForm.value.galleryImages; let i = index">
+            <div class="relative w-full h-32 border rounded-lg overflow-hidden">
+              <img
+                *ngIf="image"
+                [src]="image"
+                alt="Imagen"
+                class="object-cover w-full h-full"
+              />
+
+              <button
+                *ngIf="!image"
+                type="button"
+                class="absolute inset-0 flex items-center justify-center bg-gray-100"
+                (click)="selectImage(i)"
+              >
+                <i class="pi pi-plus text-2xl"></i>
+              </button>
+
+              <button
+                *ngIf="image"
+                type="button"
+                class="absolute top-2 right-2 bg-white rounded-full p-1 shadow"
+                (click)="removeImage(i)"
+              >
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+
+        <input
+          type="file"
+          #fileInputGallery
+          (change)="onImageSelected($event)"
+          accept="image/*"
+          class="hidden"
+        />
+      </div>
       <div class="text-right">
         <button
           pButton
           type="submit"
+          (click)="saveProfile()"
+          label="Guardar Cambios"
           class="bg-primary border-primary-shade w-full"
           [disabled]="profileForm.invalid"
-        >
-          Guardar Cambios
-        </button>
+        ></button>
       </div>
     </form>
   </div>
 
-  <div class="bg-white mt-4 md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4">
+  <div
+    class="bg-white mt-6 md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4"
+  >
     <h3 class="text-xl font-semibold mb-2">Crear Perfil de Empleado</h3>
     <form
+      *ngIf="employeeForm"
       [formGroup]="employeeForm"
       class="bg-white md:shadow-custom-light rounded md:px-8 md:pt-6 md:pb-6 md:mb-4"
     >
@@ -268,8 +328,16 @@
     <div class="flex items-center justify-between">
       <button
         pButton
+        *ngIf="editEmployee && employeeData"
+        (click)="handleEdit()"
+        label="Editar"
+        class="bg-primary border-primary-shade w-full"
+      ></button>
+      <button
+        pButton
+        *ngIf="!editEmployee"
         type="submit"
-        (click)="send()"
+        (click)="saveEmployee()"
         label="Guardar"
         class="bg-primary border-primary-shade w-full"
       ></button>

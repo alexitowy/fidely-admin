@@ -49,11 +49,11 @@
           type="text"
           placeholder="Dirección"
           class="w-full"
-          formControlName="location"
-          id="location"
+          formControlName="defaultAddress"
+          id="defaultAddress"
         />
         <div
-          *ngIf="registerForm.controls['location'].errors?.['required'] && registerForm.get('location')?.touched"
+          *ngIf="registerForm.controls['defaultAddress'].errors?.['required'] && registerForm.get('defaultAddress')?.touched"
           class="mt-2 text-danger"
         >
           Este campo es obligatorio.

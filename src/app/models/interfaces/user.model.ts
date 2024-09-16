@@ -2,13 +2,14 @@ export interface Company {
     uid?: string,
     email: string,
     password: string,
-    location: string,
+    defaultAddress: string,
+    additionalAddresses: any,
     cif: string,
     category: string,
     companyName: string,
     banner?: string,
     logo?: string,
-    images?: any,
+    galleryImages?: any,
     description?: string,
     phones?: any,
     role?: string,
@@ -18,3 +19,10 @@ export interface Company {
 }
 
 export type CompanyProfile = Partial<Company>;
+
+export interface Employee {
+    id?: string,
+    employeeEmail: string,
+    password: string,
+    role: string
+}
