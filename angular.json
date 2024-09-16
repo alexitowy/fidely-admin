@@ -54,7 +54,7 @@
               ],
               "outputHashing": "all"
             },
-            "preproduction": {
+            "preProduction": {
               "budgets": [
                 {
                   "type": "initial",
