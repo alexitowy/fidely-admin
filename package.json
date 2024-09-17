@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:pro": "ng build -c=production",
+    "build:pre": "ng build -c=preProduction",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

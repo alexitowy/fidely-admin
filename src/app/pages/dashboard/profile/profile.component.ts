@@ -71,26 +71,26 @@ export class ProfileComponent {
   buildFormProfile() {
     this.profileForm = this.fb.group({
       companyName: [
-        this.profileData ? this.profileData.companyName : '',
+        this.profileData?.companyName ? this.profileData.companyName : '',
         Validators.required,
       ],
-      description: [this.profileData ? this.profileData.description : ''],
+      description: [this.profileData?.description ? this.profileData.description : ''],
       timeTables: this.fb.array(
-        this.profileData
+        this.profileData?.timeTables
           ? this.buildTimeTables(this.profileData.timeTables)
           : []
       ),
       defaultAddress: [
-        this.profileData ? this.profileData.defaultAddress : '',
+        this.profileData?.defaultAddress ? this.profileData.defaultAddress : '',
         Validators.required,
       ],
       additionalAddresses: this.fb.array(
-        this.profileData ? this.profileData.additionalAddresses : []
+        this.profileData?.additionalAddresses ? this.profileData.additionalAddresses : []
       ),
-      phones: this.fb.array(this.profileData ? this.profileData.phones : []),
-      logo: [this.profileData ? this.profileData.logo : null],
-      banner: [this.profileData ? this.profileData.banner : null],
-      galleryImages: [this.profileData.galleryImages ? this.profileData.galleryImages : Array(10).fill(null)]
+      phones: this.fb.array(this.profileData?.phones ? this.profileData.phones : []),
+      logo: [this.profileData?.logo ? this.profileData.logo : null],
+      banner: [this.profileData?.banner ? this.profileData.banner : null],
+      galleryImages: [this.profileData?.galleryImages ? this.profileData.galleryImages : Array(10).fill(null)]
     });
 
     this.profileForm.valueChanges.subscribe(() => {

@@ -1,7 +1,32 @@
 {
   "projects": {
-    "default": "fidelity-admin",
-    "fidelity-admin-pre": "fidelity-admin-pre",
-    "fidelity-admin-pro": "fidelity-admin-pro"
-  }
+    "default": "fidelity-back",
+    "fidelity-back-pre": "fidelity-back-pre",
+    "fidelity-back-pro": "fidelity-back-pro"
+  },
+  "targets": {
+    "fidelity-back": {
+      "hosting": {
+        "fidely-admin": [
+          "fidely-admin"
+        ]
+      }
+    },
+    "fidelity-back-pre": {
+      "hosting": {
+        "fidely-admin-pre": [
+          "fidely-admin-pre"
+        ]
+      }
+    },
+    "fidelity-back-pro": {
+      "hosting": {
+        "fidely-admin-pro": [
+          "fidely-admin-pro"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
