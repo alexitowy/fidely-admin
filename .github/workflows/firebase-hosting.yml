@@ -27,7 +27,14 @@ jobs:
 
       # 3. Construir el proyecto Angular
       - name: Build Angular app
-        run: npm run build --configuration ${{ github.ref_name }}
+        run: |
+          if [[ "${{ github.ref_name }}" == "develop" ]]; then
+            npm run build --configuration development;
+          elif [[ "${{ github.ref_name }}" == "preproduction" ]]; then
+            npm run build --configuration preProduction;
+          elif [[ "${{ github.ref_name }}" == "master" ]]; then
+            npm run build --configuration production;
+          fi
 
       # 4. Autenticarse con Firebase según la rama
       - name: Set Firebase project
