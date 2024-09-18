@@ -3,44 +3,50 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - master
       - develop
       - preproduction
+      - master  # Para producción
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      # 1. Chequear el código
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
+      # 2. Instalar Node.js y dependencias
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build
-      run: |
-        if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
-          npm run build:production
-        elif [[ ${{ github.ref }} == 'refs/heads/develop' ]]; then
-          npm run build:develop
-        elif [[ ${{ github.ref }} == 'refs/heads/preProduction' ]]; then
-          npm run build:preProduction
-        fi
+      # 3. Construir el proyecto Angular
+      - name: Build Angular app
+        run: npm run build --configuration ${{ github.ref_name }}
 
-    - name: Deploy
-      env:
-        FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
-      run: |
-        if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
-          npm run deploy:production
-        elif [[ ${{ github.ref }} == 'refs/heads/develop' ]]; then
-          npm run deploy:develop
-        elif [[ ${{ github.ref }} == 'refs/heads/preproduction' ]]; then
-          npm run deploy:preproduction
-        fi
+      # 4. Autenticarse con Firebase según la rama
+      - name: Set Firebase project
+        run: |
+          if [[ "${{ github.ref_name }}" == "develop" ]]; then
+            firebase use --token ${{ secrets.FIREBASE_TOKEN }} fidelity-back;
+          elif [[ "${{ github.ref_name }}" == "preproduction" ]]; then
+            firebase use --token ${{ secrets.FIREBASE_TOKEN }} fidelity-back-pre;
+          elif [[ "${{ github.ref_name }}" == "master" ]]; then
+            firebase use --token ${{ secrets.FIREBASE_TOKEN }} fidelity-back-pro;
+          fi
+
+      # 5. Desplegar a Firebase Hosting
+      - name: Deploy to Firebase Hosting
+        run: |
+          if [[ "${{ github.ref_name }}" == "develop" ]]; then
+            firebase deploy --only hosting:fidely-admin --token ${{ secrets.FIREBASE_TOKEN }};
+          elif [[ "${{ github.ref_name }}" == "preproduction" ]]; then
+            firebase deploy --only hosting:fidely-admin-pre --token ${{ secrets.FIREBASE_TOKEN }};
+          elif [[ "${{ github.ref_name }}" == "master" ]]; then
+            firebase deploy --only hosting:fidely-admin --token ${{ secrets.FIREBASE_TOKEN }};
+          fi
