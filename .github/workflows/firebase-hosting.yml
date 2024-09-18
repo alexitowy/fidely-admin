@@ -5,18 +5,16 @@ on:
     branches:
       - develop
       - preproduction
-      - master  # Para producción
+      - master
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Chequear el código
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Instalar Node.js y dependencias
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -25,18 +23,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 3. Construir el proyecto Angular
-      - name: Build Angular app
+      - name: Set Angular environment
         run: |
           if [[ "${{ github.ref_name }}" == "develop" ]]; then
-            ng build -c=development;
+            echo "ANGULAR_ENV=development" >> $GITHUB_ENV
           elif [[ "${{ github.ref_name }}" == "preproduction" ]]; then
-            ng build -c=preProduction;
+            echo "ANGULAR_ENV=preProduction" >> $GITHUB_ENV
           elif [[ "${{ github.ref_name }}" == "master" ]]; then
-            ng build -c=production;
+            echo "ANGULAR_ENV=production" >> $GITHUB_ENV
           fi
 
-      # 4. Autenticarse con Firebase según la rama
+      - name: Build Angular app
+        run: npm run build -- --configuration=$ANGULAR_ENV
+
       - name: Set Firebase project
         run: |
           if [[ "${{ github.ref_name }}" == "develop" ]]; then
@@ -47,7 +46,6 @@ jobs:
             firebase use --token ${{ secrets.FIREBASE_TOKEN }} fidelity-back-pro;
           fi
 
-      # 5. Desplegar a Firebase Hosting
       - name: Deploy to Firebase Hosting
         run: |
           if [[ "${{ github.ref_name }}" == "develop" ]]; then
