@@ -29,11 +29,11 @@ jobs:
       - name: Build Angular app
         run: |
           if [[ "${{ github.ref_name }}" == "develop" ]]; then
-            npm run build --configuration development;
+            ng build -c=development;
           elif [[ "${{ github.ref_name }}" == "preproduction" ]]; then
-            npm run build --configuration preProduction;
+            ng build -c=preProduction;
           elif [[ "${{ github.ref_name }}" == "master" ]]; then
-            npm run build --configuration production;
+            ng build -c=production;
           fi
 
       # 4. Autenticarse con Firebase según la rama
