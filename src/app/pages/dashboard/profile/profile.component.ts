@@ -47,6 +47,8 @@ export class ProfileComponent {
     private readonly imageCompress: NgxImageCompressService
   ) {
     this.currentUser = this.firebaseAuthService.getAuth().currentUser;
+    console.log(this.currentUser);
+    
     this.loadData();
     window.addEventListener('beforeunload', this.preventDefault.bind(this));
   }
@@ -100,8 +102,8 @@ export class ProfileComponent {
 
   buildFormEmployee() {
     this.employeeForm = this.fb.group({
-      employeeEmail: [
-        this.employeeData ? this.employeeData.employeeEmail : '',
+      email: [
+        this.employeeData ? this.employeeData.email : '',
         [Validators.email, Validators.required],
       ],
       password: [
@@ -111,7 +113,7 @@ export class ProfileComponent {
     });
     if (this.employeeData) {
       this.editEmployee = true;
-      this.employeeForm.controls['employeeEmail'].disable();
+      this.employeeForm.controls['email'].disable();
       this.employeeForm.controls['password'].disable();
     } else {
       this.editEmployee = false;
@@ -274,7 +276,7 @@ export class ProfileComponent {
   }
 
   handleEdit() {
-    this.employeeForm.controls['employeeEmail'].enable();
+    this.employeeForm.controls['email'].enable();
     this.employeeForm.controls['password'].enable();
     this.editEmployee = false;
   }
@@ -288,7 +290,7 @@ export class ProfileComponent {
           let dataEmployee = { ...this.employeeForm.value };
 
           await this.firebaseAuthService.updateDocument(path, dataEmployee);
-          this.employeeForm.controls['employeeEmail'].disable();
+          this.employeeForm.controls['email'].disable();
           this.employeeForm.controls['password'].disable();
           this.editEmployee = true;
           this.eventService.presentToastSuccess(

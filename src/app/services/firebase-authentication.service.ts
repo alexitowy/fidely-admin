@@ -11,8 +11,9 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   signOut,
+  signInWithCustomToken
 } from 'firebase/auth';
-import { Company } from '../models/interfaces/user.model';
+import { Company, Employee } from '../models/interfaces/user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import {
   getFirestore,
@@ -24,6 +25,8 @@ import {
   query,
   updateDoc,
   getDocs,
+  where,
+  WhereFilterOp
 } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import {
@@ -63,7 +66,6 @@ export class FirebaseAuthenticationService {
     try {
       const result = await this.auth.signInWithPopup(this.facebookProvider);
       const user = result.user;
-      console.log(result.user);
       return user;
     } catch (error) {
       console.error('Error during Facebook sign-in:', error);
@@ -75,7 +77,6 @@ export class FirebaseAuthenticationService {
     try {
       const result = await this.auth.signInWithPopup(this.twitterProvider);
       const user = result.user;
-      console.log(result.user);
       return user;
     } catch (error) {
       console.error('Error during Facebook sign-in:', error);
@@ -87,7 +88,6 @@ export class FirebaseAuthenticationService {
     try {
       const result = await this.auth.signInWithPopup(this.googleProvider);
       const user = result.user;
-      console.log(result.user);
       return user;
     } catch (error) {
       console.error('Error during Facebook sign-in:', error);
@@ -156,4 +156,18 @@ export class FirebaseAuthenticationService {
   }
 
   getFilePath() {}
+
+  async getEmployeeByEmail(path: string, param: string, condition: WhereFilterOp, value: string) {
+    const ref = collection(getFirestore(), path);
+    const q = query(ref, where(param, condition, value));
+
+    // Obtener los documentos de la colección
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      const id = doc.id;
+      return { id, ...data } as Employee;
+    });
+  }
 }

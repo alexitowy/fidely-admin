@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import { SignInProvider } from '../../../models/enums/singInProvider.enum';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FirebaseAuthenticationService } from '../../../services/firebase-authentication.service';
-import { Company } from '../../../models/interfaces/user.model';
 import { Router } from '@angular/router';
 import { User } from 'firebase/auth';
-import { MessageService } from 'primeng/api';
-import { MessageToast } from '../../../models/enums/messageToast';
 import { EventService } from '../../../core/services/event.service';
+import { SignInProvider } from '../../../models/enums/singInProvider.enum';
+import { Company } from '../../../models/interfaces/user.model';
+import { FirebaseAuthenticationService } from '../../../services/firebase-authentication.service';
 
 @Component({
   selector: 'app-auth',
@@ -19,7 +17,10 @@ export class AuthComponent {
   showLoading: boolean = false;
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.email, Validators.required]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+    ]),
   });
 
   constructor(
@@ -31,7 +32,6 @@ export class AuthComponent {
   ngOnInit() {}
 
   onSubmit() {}
-
 
   async signInWith(provider: SignInProvider) {
     this.showLoading = true;
@@ -53,15 +53,19 @@ export class AuthComponent {
       }
       this.navigateToHome();
 
-      this.eventService.presentToastSuccess(`Bienvenido/a ${result.displayName}`);
+      this.eventService.presentToastSuccess(
+        `Bienvenido/a ${result.displayName}`
+      );
     } catch (err) {
-      this.eventService.presentToastDanger('No se ha completado el inicio de sesión.');
+      this.eventService.presentToastDanger(
+        'No se ha completado el inicio de sesión.'
+      );
     } finally {
       this.showLoading = false;
     }
   }
 
-  send() {
+  async send() {
     if (this.loginForm.valid) {
       this.showLoading = true;
 
@@ -70,10 +74,44 @@ export class AuthComponent {
         .then((result) => {
           this.loginForm.reset();
           this.navigateToHome();
-          this.eventService.presentToastSuccess(`Bienvenido/a ${result.displayName}`);
+          this.eventService.presentToastSuccess(
+            `Bienvenido/a ${result.displayName}`
+          );
         })
-        .catch((err) => {
-          this.eventService.presentToastDanger('Los datos introducidos son incorrectos.');
+        .catch(async (err) => {
+          const users = await this.firebaseAuthService.getCollection('users');
+
+          let foundEmployee = false;
+
+          for (const doc of users) {
+            const pathEmployee = `users/${doc.id}/employee`;
+            const employeesQuery =
+              await this.firebaseAuthService.getEmployeeByEmail(
+                pathEmployee,
+                'employeeEmail',
+                '==',
+                this.loginForm.value.email
+              );
+            if (employeesQuery.length > 0) {
+              const employeeDoc = employeesQuery[0];
+              console.log(employeeDoc);
+
+              // Validar la contraseña (esto debe hacerse de forma segura, por ejemplo, mediante un servidor intermedio)
+              if (employeeDoc.password === this.loginForm.value.password) {
+                foundEmployee = true;
+                this.navigateToDashboardEmployee();
+                break;
+              } else {
+                console.log('Contraseña incorrecta para el empleado');
+              }
+            }
+          }
+
+          if (!foundEmployee) {
+            this.eventService.presentToastDanger(
+              'Los datos introducidos son incorrectos.'
+            );
+          }
         })
         .finally(() => {
           this.showLoading = false;
@@ -90,5 +128,8 @@ export class AuthComponent {
 
   navigateToHome(): void {
     this.router.navigateByUrl('/dashboard');
+  }
+  navigateToDashboardEmployee(): void {
+    this.router.navigateByUrl('/dashboard/employee');
   }
 }

@@ -15,11 +15,13 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { AvatarModule } from 'primeng/avatar';
 import { InputMaskModule } from 'primeng/inputmask';
+import { EmployeeHomeComponent } from './employee-home/employee-home.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    ProfileComponent
+    ProfileComponent,
+    EmployeeHomeComponent
   ],
   imports: [
     CommonModule,

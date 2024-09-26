@@ -286,21 +286,21 @@
       class="bg-white md:shadow-custom-light rounded md:px-8 md:pt-6 md:pb-6 md:mb-4"
     >
       <div class="mb-4">
-        <label class="label-input" for="employeeEmail"> E-mail </label>
+        <label class="label-input" for="email"> E-mail </label>
         <input
           pInputText
           type="text"
           placeholder="E-mail"
           class="w-full"
-          formControlName="employeeEmail"
-          id="employeeEmail"
+          formControlName="email"
+          id="email"
         />
         <div
-          *ngIf="(employeeForm.controls['employeeEmail'].errors?.['required'] && employeeForm.get('employeeEmail')?.touched)
-            || (employeeForm.get('employeeEmail')?.invalid && employeeForm.get('employeeEmail')?.touched)"
+          *ngIf="(employeeForm.controls['email'].errors?.['required'] && employeeForm.get('email')?.touched)
+            || (employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched)"
           class="mt-2 text-danger"
         >
-          {{employeeForm.controls['employeeEmail'].errors?.['required'] ? 'Este campo es obligatorio.' : 'No es un formato válido.'}}
+          {{employeeForm.controls['email'].errors?.['required'] ? 'Este campo es obligatorio.' : 'No es un formato válido.'}}
         </div>
       </div>
       <div class="mb-4">

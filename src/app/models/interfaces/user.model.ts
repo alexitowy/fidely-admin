@@ -22,7 +22,7 @@ export type CompanyProfile = Partial<Company>;
 
 export interface Employee {
     id?: string,
-    employeeEmail: string,
+    email: string,
     password: string,
     role: string
 }
