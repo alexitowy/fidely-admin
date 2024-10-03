@@ -1,15 +1,14 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthComponent } from './auth/auth.component';
-import { SharedModule } from '../../shared/shared.module';
-import { LoginRoutingModule } from './login-routing.module';
-import { MessageService } from 'primeng/api';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToastModule } from 'primeng/toast';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { RegisterComponent } from './register/register/register.component';
+import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { SharedModule } from '../../shared/shared.module';
+import { AuthComponent } from './auth/auth.component';
+import { LoginRoutingModule } from './login-routing.module';
+import { RegisterComponent } from './register/register/register.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { StepperModule } from 'primeng/stepper';
 
 @NgModule({
   declarations: [
@@ -23,7 +22,9 @@ import { DropdownModule } from 'primeng/dropdown';
     FormsModule,
     ReactiveFormsModule,
     LoginRoutingModule,
-    DropdownModule
+    DropdownModule,
+    CheckboxModule,
+    StepperModule
   ]
 })
 export class LoginModule { }

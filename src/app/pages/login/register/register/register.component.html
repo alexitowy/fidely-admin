@@ -3,8 +3,19 @@
     <div class="page-title">
       <h1>Únete a Fidely</h1>
     </div>
+    <div class="mb-4">
+      <p-checkbox
+        [binary]="true"
+        inputId="isEmployee"
+        class="mr-2"
+        [(ngModel)]="isEmployee"
+        (onChange)="handleEmployee($event)"
+      />
+      <label for="isEmployee">Cuenta de empleado</label>
+    </div>
     <form
       [formGroup]="registerForm"
+      *ngIf="!isEmployee"
       class="bg-white md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4"
     >
       <div class="mb-4">
@@ -135,17 +146,96 @@
           {{registerForm.controls['password'].errors?.['required'] ? 'Este campo es obligatorio.' : 'La contraseña debe tener mínimo 8 caracteres.'}}
         </div>
       </div>
+      <div class="flex items-center justify-between">
+        <button
+          pButton
+          type="submit"
+          (click)="register()"
+          label="Registrarse"
+          class="bg-primary border-primary-shade w-full"
+        ></button>
+      </div>
+    </form>
+    <form
+      [formGroup]="employeeForm"
+      *ngIf="isEmployee"
+      class="bg-white md:shadow-md rounded md:px-8 md:pt-6 md:pb-8 md:mb-4"
+    >
+      <p-stepper [linear]="true" [activeStep]="activeIndex">
+        <p-stepperPanel header="Correo">
+          <ng-template pTemplate="content" let-index="index">
+            <div class="mb-4">
+              <label class="label-input" for="email">E-mail</label>
+              <input
+                pInputText
+                type="email"
+                placeholder="E-mail"
+                class="w-full"
+                formControlName="email"
+                id="email"
+              />
+              <div
+                *ngIf="(registerForm.controls['email'].errors?.['required'] && registerForm.get('email')?.touched)
+            || (registerForm.get('email')?.invalid && registerForm.get('email')?.touched)"
+                class="mt-2 text-danger"
+              >
+                {{registerForm.controls['email'].errors?.['required'] ? 'Este campo es obligatorio.' : 'No es un formato válido.'}}
+              </div>
+            </div>
+            <div class="flex pt-4 justify-content-end">
+              <p-button
+                label="Siguiente"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                (onClick)="validateEmailListEmployee()"
+              />
+            </div>
+          </ng-template>
+        </p-stepperPanel>
+        <p-stepperPanel header="Contraseña">
+          <ng-template pTemplate="content" let-index="index">
+            <div class="mb-4">
+              <label class="label-input" for="password">Contraseña</label>
+              <p-password
+                class="w-full block"
+                [feedback]="false"
+                [toggleMask]="true"
+                placeholder="********"
+                promptLabel="Mínimo 8 caracteres"
+                formControlName="password"
+                [minlength]="8"
+              ></p-password>
+              <p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p>
+              <div
+                *ngIf="(registerForm.controls['password'].errors?.['required'] && registerForm.get('password')?.touched)
+          || (registerForm.get('password')?.invalid && registerForm.controls['password'].errors?.['minlength'])"
+                class="mt-2 text-danger"
+              >
+                {{registerForm.controls['password'].errors?.['required'] ? 'Este campo es obligatorio.' : 'La contraseña debe tener mínimo 8 caracteres.'}}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <button
+                pButton
+                type="submit"
+                (click)="registerEmployee()"
+                label="Registrarse"
+                class="bg-primary border-primary-shade w-full"
+              ></button>
+            </div>
+            <div class="flex pt-4 justify-content-between">
+              <p-button
+                label="Regresar"
+                icon="pi pi-arrow-left"
+                (onClick)="prevStep()"
+              />
+            </div>
+          </ng-template>
+        </p-stepperPanel>
+      </p-stepper>
     </form>
 
-    <div class="flex items-center justify-between">
-      <button
-        pButton
-        type="submit"
-        (click)="register()"
-        label="Registrarse"
-        class="bg-primary border-primary-shade w-full"
-      ></button>
-    </div>
     <app-loading [show]="showLoading"></app-loading>
   </div>
 </div>

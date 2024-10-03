@@ -225,7 +225,9 @@
       <div class="mb-4">
         <label class="label-input">Galeria de imágenes</label>
         <div class="grid grid-cols-2 gap-4">
-          <ng-container *ngFor="let image of profileForm.value.galleryImages; let i = index">
+          <ng-container
+            *ngFor="let image of profileForm.value.galleryImages; let i = index"
+          >
             <div class="relative w-full h-32 border rounded-lg overflow-hidden">
               <img
                 *ngIf="image"
@@ -304,23 +306,20 @@
         </div>
       </div>
       <div class="mb-4">
-        <label class="label-input" for="password">Contraseña</label>
-        <p-password
-          class="w-full block"
-          [feedback]="false"
-          [toggleMask]="true"
-          placeholder="********"
-          promptLabel="Mínimo 8 caracteres"
-          formControlName="password"
-          [minlength]="8"
-        ></p-password>
-        <p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p>
+        <label class="label-input" for="confirmEmail">Confirmar E-mail</label>
+        <input
+          pInputText
+          type="email"
+          placeholder="E-mail"
+          class="w-full"
+          formControlName="confirmEmail"
+        />
         <div
-          *ngIf="(employeeForm.controls['password'].errors?.['required'] && employeeForm.get('password')?.touched)
-            || (employeeForm.get('password')?.invalid && employeeForm.controls['password'].errors?.['minlength'])"
+          *ngIf="(employeeForm.controls['email'].errors?.['required'] && employeeForm.get('email')?.touched)
+            || (employeeForm.get('email').value !== employeeForm.get('confirmEmail').value) && employeeForm.get('email')?.touched"
           class="mt-2 text-danger"
         >
-          {{employeeForm.controls['password'].errors?.['required'] ? 'Este campo es obligatorio.' : 'La contraseña debe tener mínimo 8 caracteres.'}}
+          {{employeeForm.controls['email'].errors?.['required'] ? 'Este campo es obligatorio.' : 'Los correos deben coincidir.'}}
         </div>
       </div>
     </form>

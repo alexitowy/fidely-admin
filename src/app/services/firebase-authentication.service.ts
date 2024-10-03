@@ -25,6 +25,7 @@ import {
   query,
   updateDoc,
   getDocs,
+  deleteDoc,
   where,
   WhereFilterOp
 } from '@angular/fire/firestore';
@@ -109,7 +110,7 @@ export class FirebaseAuthenticationService {
     });
   }
 
-  async register(user: Company) {
+  async register(user: any) {
     return (
       await createUserWithEmailAndPassword(getAuth(), user.email, user.password)
     ).user;
@@ -131,6 +132,10 @@ export class FirebaseAuthenticationService {
 
   async getDocument(path: string) {
     return (await getDoc(doc(getFirestore(), path))).data();
+  }
+
+  async deleteDocument(path: string) {
+    return (await deleteDoc(doc(getFirestore(), path)));
   }
 
   async getCollection(path: string, collectionQuery?: any) {
@@ -157,7 +162,7 @@ export class FirebaseAuthenticationService {
 
   getFilePath() {}
 
-  async getEmployeeByEmail(path: string, param: string, condition: WhereFilterOp, value: string) {
+  async getDocumentsByParam(path: string, param: string, condition: WhereFilterOp, value: string) {
     const ref = collection(getFirestore(), path);
     const q = query(ref, where(param, condition, value));
 
@@ -167,7 +172,7 @@ export class FirebaseAuthenticationService {
     return querySnapshot.docs.map((doc) => {
       const data = doc.data();
       const id = doc.id;
-      return { id, ...data } as Employee;
+      return { id, ...data } as any;
     });
   }
 }
