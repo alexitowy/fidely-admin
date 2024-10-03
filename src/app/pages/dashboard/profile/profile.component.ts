@@ -1,10 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'firebase/auth';
 import { NgxImageCompressService } from 'ngx-image-compress';
@@ -12,8 +7,8 @@ import { FileUpload } from 'primeng/fileupload';
 import { EventService } from '../../../core/services/event.service';
 import { UtilsService } from '../../../core/services/utils.service';
 import {
-  CompanyProfile,
-  Employee
+  Company,
+  Employee,
 } from '../../../models/interfaces/user.model';
 import { FirebaseAuthenticationService } from '../../../services/firebase-authentication.service';
 
@@ -28,9 +23,9 @@ export class ProfileComponent {
   showLoading: boolean = false;
   employeeForm: FormGroup;
   profileForm: FormGroup;
-  profileData: CompanyProfile;
+  profileData: Company;
   currentUser: User;
-  employeeData: Employee;
+  employeeData: any;
   editEmployee: boolean = false;
 
   images: string[] = Array(10).fill(null);
@@ -47,8 +42,7 @@ export class ProfileComponent {
     private readonly imageCompress: NgxImageCompressService
   ) {
     this.currentUser = this.firebaseAuthService.getAuth().currentUser;
-    console.log(this.currentUser);
-    
+
     this.loadData();
     window.addEventListener('beforeunload', this.preventDefault.bind(this));
   }
@@ -57,13 +51,22 @@ export class ProfileComponent {
 
   async loadData() {
     const path = `users/${this.currentUser.uid}`;
-    this.profileData = await this.firebaseAuthService.getDocument(path);
-    const pathEmployee = `users/${this.currentUser.uid}/employee`;
+    await this.firebaseAuthService.getDocument(path).then((res: any) => {
+      this.profileData = { id: res.uid, ...res };
+    });
+
     await this.firebaseAuthService
-      .getCollection(pathEmployee)
-      .then((res: any) => {
+      .getDocumentsByParam(
+        'employees',
+        'idUser',
+        '==',
+        this.currentUser.uid
+      )
+      .then((res: Employee[]) => {
         if (res && res.length > 0) {
-          this.employeeData = res[0];
+          this.employeeData = res.find(
+            (employee: any) => (employee.role = 'EMPLOYEE')
+          );
         }
       })
       .finally(() => this.buildFormEmployee());
@@ -76,7 +79,9 @@ export class ProfileComponent {
         this.profileData?.companyName ? this.profileData.companyName : '',
         Validators.required,
       ],
-      description: [this.profileData?.description ? this.profileData.description : ''],
+      description: [
+        this.profileData?.description ? this.profileData.description : '',
+      ],
       timeTables: this.fb.array(
         this.profileData?.timeTables
           ? this.buildTimeTables(this.profileData.timeTables)
@@ -87,12 +92,20 @@ export class ProfileComponent {
         Validators.required,
       ],
       additionalAddresses: this.fb.array(
-        this.profileData?.additionalAddresses ? this.profileData.additionalAddresses : []
+        this.profileData?.additionalAddresses
+          ? this.profileData.additionalAddresses
+          : []
       ),
-      phones: this.fb.array(this.profileData?.phones ? this.profileData.phones : []),
+      phones: this.fb.array(
+        this.profileData?.phones ? this.profileData.phones : []
+      ),
       logo: [this.profileData?.logo ? this.profileData.logo : null],
       banner: [this.profileData?.banner ? this.profileData.banner : null],
-      galleryImages: [this.profileData?.galleryImages ? this.profileData.galleryImages : Array(10).fill(null)]
+      galleryImages: [
+        this.profileData?.galleryImages
+          ? this.profileData.galleryImages
+          : Array(10).fill(null),
+      ],
     });
 
     this.profileForm.valueChanges.subscribe(() => {
@@ -106,15 +119,15 @@ export class ProfileComponent {
         this.employeeData ? this.employeeData.email : '',
         [Validators.email, Validators.required],
       ],
-      password: [
-        this.employeeData ? this.employeeData.password : '',
-        [Validators.required, Validators.minLength(8)],
+      confirmEmail: [
+        this.employeeData ? this.employeeData.confirmEmail : '',
+        [Validators.required, Validators.email],
       ],
     });
     if (this.employeeData) {
       this.editEmployee = true;
       this.employeeForm.controls['email'].disable();
-      this.employeeForm.controls['password'].disable();
+      this.employeeForm.controls['confirmEmail'].disable();
     } else {
       this.editEmployee = false;
     }
@@ -218,14 +231,14 @@ export class ProfileComponent {
           uploadPromises.push(this.uploadImage('banner'));
         }
 
-        if (
-          this.profileForm.value.galleryImages.length > 0
-        ) {
-          this.profileForm.value.galleryImages.forEach((dataUrl: string, index: number) => {
-            if (dataUrl && this.utilsService.isDataURL(dataUrl)) {
-              uploadPromises.push(this.uploadImagesGallery(index, dataUrl));
+        if (this.profileForm.value.galleryImages.length > 0) {
+          this.profileForm.value.galleryImages.forEach(
+            (dataUrl: string, index: number) => {
+              if (dataUrl && this.utilsService.isDataURL(dataUrl)) {
+                uploadPromises.push(this.uploadImagesGallery(index, dataUrl));
+              }
             }
-          });
+          );
         }
 
         await Promise.all(uploadPromises);
@@ -277,7 +290,7 @@ export class ProfileComponent {
 
   handleEdit() {
     this.employeeForm.controls['email'].enable();
-    this.employeeForm.controls['password'].enable();
+    this.employeeForm.controls['confirmEmail'].enable();
     this.editEmployee = false;
   }
 
@@ -286,21 +299,32 @@ export class ProfileComponent {
       this.showLoading = true;
       try {
         if (this.employeeData) {
-          const path = `users/${this.currentUser.uid}/employee/${this.employeeData.id}`;
-          let dataEmployee = { ...this.employeeForm.value };
+          const path = `employees/${this.employeeData.id}`;
+          let dataEmployee = { email: this.employeeForm.value.email };
 
           await this.firebaseAuthService.updateDocument(path, dataEmployee);
           this.employeeForm.controls['email'].disable();
-          this.employeeForm.controls['password'].disable();
+          this.employeeForm.controls['confirmEmail'].disable();
           this.editEmployee = true;
           this.eventService.presentToastSuccess(
             'Empleado actualizado con éxito.'
           );
         } else {
-          const path = `users/${this.currentUser.uid}/employee`;
-          const dataUser = { ...this.employeeForm.value, role: 'EMPLOYEE' };
-          await this.firebaseAuthService.addDocument(path, dataUser);
-          this.eventService.presentToastSuccess('Empleado creado con éxito.');
+          const path = `employees`;
+          const dataUser = {
+            email: this.employeeForm.value.email,
+            role: 'EMPLOYEE',
+            idUser: this.profileData.id,
+          };
+          const saveEmployee = await this.firebaseAuthService.addDocument(
+            path,
+            dataUser
+          );
+          if (saveEmployee.id) {
+            this.loadData();
+            this.employeeForm.controls['confirmEmail'].reset();
+            this.eventService.presentToastSuccess('Empleado creado con éxito.');
+          }
         }
       } catch (err) {
         console.log(err);
@@ -325,7 +349,8 @@ export class ProfileComponent {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        this.profileForm.value.galleryImages[this.currentImageIndex] = reader.result as string;
+        this.profileForm.value.galleryImages[this.currentImageIndex] =
+          reader.result as string;
       };
       reader.readAsDataURL(file);
     }
@@ -345,7 +370,8 @@ export class ProfileComponent {
 
   preventDefault(event: BeforeUnloadEvent) {
     if (this.isFormDirty) {
-      const confirmationMessage = 'Tienes cambios no guardados. ¿Estás seguro de que quieres abandonar esta página?';
+      const confirmationMessage =
+        'Tienes cambios no guardados. ¿Estás seguro de que quieres abandonar esta página?';
       event.returnValue = confirmationMessage;
       return confirmationMessage;
     }
@@ -358,7 +384,9 @@ export class ProfileComponent {
 
   canDeactivate(): boolean | Promise<boolean> {
     if (this.isFormDirty) {
-      const confirmLeave = confirm('Tienes cambios no guardados. ¿Estás seguro de que quieres abandonar esta página?');
+      const confirmLeave = confirm(
+        'Tienes cambios no guardados. ¿Estás seguro de que quieres abandonar esta página?'
+      );
       if (confirmLeave) {
         this.isFormDirty = false;
       }
