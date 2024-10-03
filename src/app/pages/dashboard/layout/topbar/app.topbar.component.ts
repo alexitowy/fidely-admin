@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from '../app.layout.service';
 import { FirebaseAuthenticationService } from '../../../../services/firebase-authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-topbar',
@@ -19,10 +20,13 @@ export class AppTopBarComponent {
 
     constructor(
         public layoutService: LayoutService,
+        private router: Router,
         private readonly firebaseAuthenticationService: FirebaseAuthenticationService
     ) { }
 
     signOut(){
         this.firebaseAuthenticationService.signOut();
+        localStorage.removeItem('user');
+        this.router.navigateByUrl('/auth');
     }
 }
