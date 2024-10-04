@@ -79,20 +79,6 @@ export class RegisterComponent {
     });
   }
 
-  handleEmployee(event: any) {
-    if (event.checked) {
-      this.registerForm.controls['companyName'].disable();
-      this.registerForm.controls['category'].disable();
-      this.registerForm.controls['cif'].disable();
-      this.registerForm.controls['defaultAddress'].disable();
-    } else {
-      this.registerForm.controls['companyName'].enable();
-      this.registerForm.controls['category'].enable();
-      this.registerForm.controls['cif'].enable();
-      this.registerForm.controls['defaultAddress'].enable();
-    }
-  }
-
   async register() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
@@ -105,6 +91,8 @@ export class RegisterComponent {
       const result = await this.firebaseAuthService.register(dataUser);
       await this.handleSuccessfulRegistration(result.uid, dataUser);
     } catch (err) {
+      console.log(err);
+      
       this.eventService.presentToastDanger(
         'Los datos introducidos son incorrectos.'
       );
@@ -115,7 +103,7 @@ export class RegisterComponent {
 
   private async handleSuccessfulRegistration(uid: string, dataUser: Company) {
     await this.firebaseAuthService.updateUser(dataUser);
-    this.registerForm.controls['uid'].setValue(uid);
+    this.registerForm.controls['id'].setValue(uid);
     await this.setUserInfo(uid);
     this.router.navigateByUrl('auth');
     this.registerForm.reset();
@@ -130,6 +118,8 @@ export class RegisterComponent {
     try {
       await this.firebaseAuthService.setDocument(path, dataUser);
     } catch (err) {
+      console.log(err);
+      
       this.eventService.presentToastDanger(
         'Ha ocurrido un error, intentelo más tarde.'
       );

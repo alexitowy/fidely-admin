@@ -16,7 +16,39 @@
           id="companyName"
         />
       </div>
-
+      <div class="mb-4">
+        <button
+          pButton
+          type="button"
+          (click)="linkWithSocialNetwork(providers.google)"
+          icon="pi pi-google"
+          label="Vincular Google"ç
+          [disabled]="linkGoogle"
+          class="w-full p-button-outlined text-secondary"
+        ></button>
+      </div>
+      <div class="mb-4">
+        <button
+          pButton
+          type="button"
+          (click)="linkWithSocialNetwork(providers.facebook)"
+          icon="pi pi-facebook"
+          label="Vincular Facebook"
+          [disabled]="linkFacebook"
+          class="w-full p-button-outlined text-secondary"
+        ></button>
+      </div>
+      <div class="mb-4">
+        <button
+          pButton
+          type="button"
+          (click)="linkWithSocialNetwork(providers.twitter)"
+          icon="pi pi-twitter"
+          label="Vincular Twitter"
+          [disabled]="linkTwitter"
+          class="w-full p-button-outlined text-secondary"
+        ></button>
+      </div>
       <!-- Descripción -->
       <div class="mb-4">
         <label class="label-input">Descripción del Negocio</label>

@@ -1,42 +1,43 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  FacebookAuthProvider,
-  TwitterAuthProvider,
-  GoogleAuthProvider,
-  User,
-  sendPasswordResetEmail,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  signOut,
-  signInWithCustomToken
-} from 'firebase/auth';
-import { Company, Employee } from '../models/interfaces/user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 import {
-  getFirestore,
-  setDoc,
-  getDoc,
-  doc,
   addDoc,
   collection,
-  query,
-  updateDoc,
-  getDocs,
   deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  updateDoc,
   where,
   WhereFilterOp
 } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
 import {
-  uploadString,
+  createUserWithEmailAndPassword,
+  FacebookAuthProvider,
+  getAuth,
+  GoogleAuthProvider,
+  linkWithPopup,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+  TwitterAuthProvider,
+  updateProfile,
+  User,
+  UserCredential
+} from 'firebase/auth';
+import {
+  getDownloadURL,
   getStorage,
   ref,
-  getDownloadURL,
+  uploadString,
 } from 'firebase/storage';
-import { map } from 'rxjs';
+import { Company } from '../models/interfaces/user.model';
+import { SignInProvider } from '../models/enums/singInProvider.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -63,35 +64,51 @@ export class FirebaseAuthenticationService {
     ).user;
   }
 
-  async signInWithFacebook(): Promise<User> {
+  async signInWithSocialNetwork(provider: SignInProvider): Promise<User> {
+    let result: any;
     try {
-      const result = await this.auth.signInWithPopup(this.facebookProvider);
-      const user = result.user;
-      return user;
+      switch (provider) {
+        /* case SignInProvider.apple:
+          result = await this.firebaseAuthService.signInWithApple();
+          break; */
+        case SignInProvider.facebook:
+          result = await this.auth.signInWithPopup(this.facebookProvider);
+          break;
+        case SignInProvider.google:
+          result = await this.auth.signInWithPopup(this.googleProvider);
+          break;
+        case SignInProvider.twitter:
+          result = await this.auth.signInWithPopup(this.twitterProvider);
+          break;
+      }
+      return result.user as User;
     } catch (error) {
       console.error('Error during Facebook sign-in:', error);
       throw error;
     }
   }
 
-  async signInWithTwitter(): Promise<User> {
+  async linkWithSocialNetwork(provider: SignInProvider): Promise<User> {
     try {
-      const result = await this.auth.signInWithPopup(this.twitterProvider);
-      const user = result.user;
-      return user;
+      let result: any;
+      switch (provider) {
+        /* case SignInProvider.apple:
+          result = await this.firebaseAuthService.signInWithApple();
+          break; */
+        case SignInProvider.facebook:
+          result = await linkWithPopup(getAuth().currentUser, this.facebookProvider);
+          break;
+        case SignInProvider.google:
+          result = await linkWithPopup(getAuth().currentUser, this.googleProvider);
+          break;
+        case SignInProvider.twitter:
+          result = await linkWithPopup(getAuth().currentUser, this.twitterProvider);
+          break;
+      }
+      console.log("Cuenta vinculada exitosamente:", result.user);
+      return result.user as User;
     } catch (error) {
-      console.error('Error during Facebook sign-in:', error);
-      throw error;
-    }
-  }
-
-  async signInWithGoogle(): Promise<User> {
-    try {
-      const result = await this.auth.signInWithPopup(this.googleProvider);
-      const user = result.user;
-      return user;
-    } catch (error) {
-      console.error('Error during Facebook sign-in:', error);
+      console.error('Error al vincular la cuenta:', error);
       throw error;
     }
   }

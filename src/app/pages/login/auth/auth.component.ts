@@ -40,22 +40,8 @@ export class AuthComponent {
 
   async signInWith(provider: SignInProvider) {
     this.showLoading = true;
-    let result: User;
     try {
-      switch (provider) {
-        /* case SignInProvider.apple:
-          result = await this.firebaseAuthService.signInWithApple();
-          break; */
-        case SignInProvider.facebook:
-          result = await this.firebaseAuthService.signInWithFacebook();
-          break;
-        case SignInProvider.google:
-          result = await this.firebaseAuthService.signInWithGoogle();
-          break;
-        case SignInProvider.twitter:
-          result = await this.firebaseAuthService.signInWithTwitter();
-          break;
-      }
+      const result = await this.firebaseAuthService.signInWithSocialNetwork(provider);
       if (result) {
         const existUser = await this.utilsService.validateUserByEmail(
           'users',

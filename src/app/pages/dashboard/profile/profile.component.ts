@@ -6,11 +6,9 @@ import { NgxImageCompressService } from 'ngx-image-compress';
 import { FileUpload } from 'primeng/fileupload';
 import { EventService } from '../../../core/services/event.service';
 import { UtilsService } from '../../../core/services/utils.service';
-import {
-  Company,
-  Employee,
-} from '../../../models/interfaces/user.model';
+import { Company, Employee } from '../../../models/interfaces/user.model';
 import { FirebaseAuthenticationService } from '../../../services/firebase-authentication.service';
+import { SignInProvider } from '../../../models/enums/singInProvider.enum';
 
 @Component({
   selector: 'app-profile',
@@ -20,6 +18,7 @@ import { FirebaseAuthenticationService } from '../../../services/firebase-authen
 export class ProfileComponent {
   @ViewChild('logoUploader') logoUploader: FileUpload;
   @ViewChild('bannerUploader') bannerUploader: FileUpload;
+  providers = SignInProvider;
   showLoading: boolean = false;
   employeeForm: FormGroup;
   profileForm: FormGroup;
@@ -33,6 +32,10 @@ export class ProfileComponent {
   currentImageIndex: number = -1;
   isFormDirty: boolean = false;
 
+  linkGoogle: boolean = false;
+  linkFacebook: boolean = false;
+  linkTwitter: boolean = false;
+
   constructor(
     private readonly firebaseAuthService: FirebaseAuthenticationService,
     private readonly router: Router,
@@ -42,12 +45,35 @@ export class ProfileComponent {
     private readonly imageCompress: NgxImageCompressService
   ) {
     this.currentUser = this.firebaseAuthService.getAuth().currentUser;
+    this.validateBeforeLink(this.currentUser.providerData);
 
     this.loadData();
     window.addEventListener('beforeunload', this.preventDefault.bind(this));
   }
 
   ngOnInit() {}
+
+  validateBeforeLink(providerData: any[]) {
+    if (
+      providerData.some((provider: any) => provider.providerId === 'google.com')
+    ) {
+      this.linkGoogle = true;
+    }
+    if (
+      providerData.some(
+        (provider: any) => provider.providerId === 'twitter.com'
+      )
+    ) {
+      this.linkTwitter = true;
+    }
+    if (
+      providerData.some(
+        (provider: any) => provider.providerId === 'facebook.com'
+      )
+    ) {
+      this.linkFacebook = true;
+    }
+  }
 
   async loadData() {
     const path = `users/${this.currentUser.uid}`;
@@ -56,12 +82,7 @@ export class ProfileComponent {
     });
 
     await this.firebaseAuthService
-      .getDocumentsByParam(
-        'employees',
-        'idUser',
-        '==',
-        this.currentUser.uid
-      )
+      .getDocumentsByParam('employees', 'idUser', '==', this.currentUser.uid)
       .then((res: Employee[]) => {
         if (res && res.length > 0) {
           this.employeeData = res.find(
@@ -292,6 +313,25 @@ export class ProfileComponent {
     this.employeeForm.controls['email'].enable();
     this.employeeForm.controls['confirmEmail'].enable();
     this.editEmployee = false;
+  }
+
+  async linkWithSocialNetwork(provider: SignInProvider) {
+    this.showLoading = true;
+    let result: User;
+    try {
+      const result = await this.firebaseAuthService.linkWithSocialNetwork(
+        provider
+      );
+      this.eventService.presentToastSuccess('Cuenta vinculada exitosamente.');
+    } catch (err) {
+      console.log(err);
+
+      this.eventService.presentToastDanger(
+        'No se ha completado el inicio de sesión.'
+      );
+    } finally {
+      this.showLoading = false;
+    }
   }
 
   async saveEmployee() {
