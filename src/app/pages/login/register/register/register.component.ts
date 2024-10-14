@@ -138,6 +138,7 @@ export class RegisterComponent {
         'El correo no pertenece a ninguna empresa.'
       );
     } else {
+      this.employee = existEmployee;
       this.activeIndex += 1;
     }
   }
