@@ -105,7 +105,6 @@ export class FirebaseAuthenticationService {
           result = await linkWithPopup(getAuth().currentUser, this.twitterProvider);
           break;
       }
-      console.log("Cuenta vinculada exitosamente:", result.user);
       return result.user as User;
     } catch (error) {
       console.error('Error al vincular la cuenta:', error);

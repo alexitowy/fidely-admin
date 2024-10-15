@@ -32,6 +32,12 @@ export class ProfileComponent {
   currentImageIndex: number = -1;
   isFormDirty: boolean = false;
 
+  providersButtons = {
+    'google.com': 'linkGoogle',
+    'twitter.com': 'linkTwitter',
+    'facebook.com': 'linkFacebook'
+  };
+
   linkGoogle: boolean = false;
   linkFacebook: boolean = false;
   linkTwitter: boolean = false;
@@ -54,28 +60,17 @@ export class ProfileComponent {
   ngOnInit() {}
 
   validateBeforeLink(providerData: any[]) {
-    if (
-      providerData.some((provider: any) => provider.providerId === 'google.com')
-    ) {
-      this.linkGoogle = true;
-    }
-    if (
-      providerData.some(
-        (provider: any) => provider.providerId === 'twitter.com'
-      )
-    ) {
-      this.linkTwitter = true;
-    }
-    if (
-      providerData.some(
-        (provider: any) => provider.providerId === 'facebook.com'
-      )
-    ) {
-      this.linkFacebook = true;
-    }
+    providerData.forEach((provider: any) => {
+      const key = provider.providerId;
+      if (this.providersButtons[key]) {
+        this[this.providersButtons[key]] = true;
+      }
+    });
+    
   }
 
   async loadData() {
+    this.showLoading = true;
     const path = `users/${this.currentUser.uid}`;
     await this.firebaseAuthService.getDocument(path).then((res: any) => {
       this.profileData = { id: res.uid, ...res };
@@ -92,6 +87,8 @@ export class ProfileComponent {
       })
       .finally(() => this.buildFormEmployee());
     this.buildFormProfile();
+    
+    this.showLoading = false;
   }
 
   buildFormProfile() {
@@ -317,11 +314,25 @@ export class ProfileComponent {
 
   async linkWithSocialNetwork(provider: SignInProvider) {
     this.showLoading = true;
-    let result: User;
     try {
-      const result = await this.firebaseAuthService.linkWithSocialNetwork(
+      await this.firebaseAuthService.linkWithSocialNetwork(
         provider
       );
+      switch (provider) {
+        /* case SignInProvider.apple:
+          result = await this.firebaseAuthService.signInWithApple();
+          break; */
+        case SignInProvider.facebook:
+          this.linkFacebook = true;
+          break;
+        case SignInProvider.google:
+          this.linkGoogle = true;
+          break;
+        case SignInProvider.twitter:
+          this.linkTwitter = true;
+          break;
+      }
+      
       this.eventService.presentToastSuccess('Cuenta vinculada exitosamente.');
     } catch (err) {
       console.log(err);
