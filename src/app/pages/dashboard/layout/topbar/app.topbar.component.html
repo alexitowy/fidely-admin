@@ -1,25 +1,114 @@
 <div class="layout-topbar">
-    <a class="layout-topbar-logo" routerLink="">
-        <img src="assets/layout/images/logo_fidely1.png" alt="logo">
-        <span>Fidely</span>
-    </a>
+  <a class="layout-topbar-logo" routerLink="">
+    <img src="assets/layout/images/logo_fidely1.png" alt="logo" />
+    <span>Fidely</span>
+  </a>
 
-    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
-        <i class="pi pi-bars"></i>
-    </button>
+  <button
+    #menubutton
+    class="p-link layout-menu-button layout-topbar-button"
+    (click)="layoutService.onMenuToggle()"
+  >
+    <i class="pi pi-bars"></i>
+  </button>
 
-    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
-        <i class="pi pi-ellipsis-v"></i>
-    </button>
+  <button
+    #topbarmenubutton
+    class="p-link layout-topbar-menu-button layout-topbar-button"
+    (click)="layoutService.showProfileSidebar()"
+  >
+    <i class="pi pi-ellipsis-v"></i>
+  </button>
 
-    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button" routerLink="/dashboard/profile">
-            <i class="pi pi-user"></i>
-            <span>Perfil</span>
-        </button>
-        <button class="p-link layout-topbar-button" (click)="signOut()">
-            <i class="pi pi-sign-out"></i>
-            <span>Cerrar sesión</span>
-        </button>
+  <div
+    #topbarmenu
+    class="layout-topbar-menu"
+    [ngClass]="{
+      'layout-topbar-menu-mobile-active':
+        layoutService.state.profileSidebarVisible
+    }"
+  >
+    <div class="layout-topbar-button justify-between btn-user">
+      <button class="p-link flex w-full p-3" routerLink="/dashboard/profile">
+        <i class="pi pi-user"></i>
+        <span>Perfil</span>
+      </button>
+      <button (click)="op.toggle($event)" class="p-link p-3">
+        <i
+          class="pi pi-bell text-xl text-color-secondary ml-2"
+          pBadge
+          value="2"
+        ></i>
+      </button>
+      <p-overlayPanel #op (onShow)="onShowOverlayPanel(op)" [style]="{ width: '90%' }">
+        <div class="flex align-items-center justify-between mb-4">
+          <h5>Notifications</h5>
+        </div>
+
+        <span class="block font-normal mb-3">HOY</span>
+        <ul class="p-0 mx-0 mt-0 mb-4 list-none">
+          <li class="flex align-items-center py-2 border-bottom-1">
+            <div
+              class="w-12 h-12 flex items-center justify-center bg-blue-100 rounded-full mr-3 flex-shrink-0"
+            >
+              <i class="pi pi-dollar text-xl text-blue-500"></i>
+            </div>
+            <span class="font-semibold line-height-3"
+              >Richard Jones
+              <span class="text-700">
+                ha completado su tarjeta por cortes de caballero</span
+              >
+            </span>
+          </li>
+          <li class="flex align-items-center py-2">
+            <div
+              class="w-12 h-12 flex items-center justify-center bg-orange-100 rounded-full mr-3 flex-shrink-0"
+            >
+              <i class="pi pi-download text-xl text-orange-500"></i>
+            </div>
+            <span class="text-700 line-height-3"
+              >El empleado Henry ha vendido un total de:
+              <span class="text-blue-500 font-medium">500$</span> en este mes.</span
+            >
+          </li>
+        </ul>
+
+        <span class="block font-normal font-medium mb-3">AYER</span>
+        <ul class="p-0 m-0 list-none">
+          <li class="flex align-items-center py-2 border-bottom-1">
+            <div
+              class="w-12 h-12 flex items-center justify-center bg-blue-100 rounded-full mr-3 flex-shrink-0"
+            >
+              <i class="pi pi-dollar text-xl text-blue-500"></i>
+            </div>
+            <span class="font-semibold line-height-3"
+              >Keyser Wick
+              <span class="text-700">
+                ha adquirido la tarjeta por barberia completa.</span
+              >
+            </span>
+          </li>
+          <li class="flex align-items-center py-2 border-bottom-1">
+            <div
+              class="w-12 h-12 flex items-center justify-center bg-pink-100 rounded-full mr-3 flex-shrink-0"
+            >
+              <i class="pi pi-question text-xl text-pink-500"></i>
+            </div>
+            <span class="font-semibold line-height-3"
+              >Jane Davis<span class="text-700">
+                nuevo cliente afiliado.</span
+              ></span
+            >
+          </li>
+        </ul>
+        <div class="text-right mt-4">
+            <button pButton label="Ver más" icon="pi pi-angle-right" class="p-button-text" (click)="goToNotificationsPage(op)"></button>
+          </div>
+      </p-overlayPanel>
     </div>
+    <button class="p-link layout-topbar-button" (click)="signOut()">
+      <i class="pi pi-sign-out"></i>
+      <span>Cerrar sesión</span>
+    </button>
+  </div>
 </div>

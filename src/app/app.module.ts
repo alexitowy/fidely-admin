@@ -7,7 +7,7 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AppLayoutModule } from './pages/dashboard/layout/app.layout.module';
 import { ProductService } from './shared/services/product.service';
@@ -23,7 +23,7 @@ import { ProductService } from './shared/services/product.service';
     AngularFireModule.initializeApp(environment.firebase),
     ToastModule
   ],
-  providers: [MessageService, ProductService],
+  providers: [MessageService, ProductService, ConfirmationService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

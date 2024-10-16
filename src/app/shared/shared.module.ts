@@ -14,6 +14,10 @@ import { TableModule } from 'primeng/table';
 import { StyleClassModule } from 'primeng/styleclass';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { MessageService } from 'primeng/api';
+import { PanelModule } from 'primeng/panel';
+import { PaginatorModule } from 'primeng/paginator';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -33,6 +37,8 @@ import { MessageService } from 'primeng/api';
     TableModule,
     StyleClassModule,
     PanelMenuModule,
+    PanelModule,
+    PaginatorModule
   ],
   exports: [
     LoadingComponent,
@@ -46,6 +52,8 @@ import { MessageService } from 'primeng/api';
     TableModule,
     StyleClassModule,
     PanelMenuModule,
+    PanelModule,
+    PaginatorModule
   ]
 })
 export class SharedModule { }

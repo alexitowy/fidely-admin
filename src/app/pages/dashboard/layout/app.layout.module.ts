@@ -17,6 +17,7 @@ import { AppTopBarComponent } from './topbar/app.topbar.component';
 import { AppMenuComponent } from './menu/app.menu.component';
 import { AppSidebarComponent } from './sidebar/app.sidebar.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
     declarations: [
@@ -39,7 +40,8 @@ import { SharedModule } from '../../../shared/shared.module';
         InputSwitchModule,
         RippleModule,
         RouterModule,
-        SharedModule
+        SharedModule,
+        OverlayPanelModule
     ],
     exports: [AppLayoutComponent]
 })

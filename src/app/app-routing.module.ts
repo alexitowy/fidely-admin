@@ -15,6 +15,22 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'notificaciones',
+    component: AppLayoutComponent,
+    loadChildren: () =>
+      import('./pages/notificaciones/notificaciones.module').then(
+        (m) => m.NotificacionesModule
+      ),
+  },
+  {
+    path: 'servicios',
+    component: AppLayoutComponent,
+    loadChildren: () =>
+      import('./pages/servicios/servicios.module').then(
+        (m) => m.ServiciosModule
+      ),
+  },
+  {
     path: 'auth',
     loadChildren: () =>
       import('./pages/login/login.module').then((m) => m.LoginModule),
