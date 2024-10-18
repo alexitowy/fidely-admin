@@ -29,13 +29,6 @@ import { EmployeeHomeComponent } from './employee-home/employee-home.component';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
-    ChartModule,
-    MenuModule,
-    TableModule,
-    StyleClassModule,
-    PanelMenuModule,
-    ButtonModule,
-    InputTextareaModule,
     FileUploadModule,
     AvatarModule,
     InputMaskModule

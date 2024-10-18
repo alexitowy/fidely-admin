@@ -1,11 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { ServiciosRoutingModule } from './servicios-routing.module';
 import { ServiciosComponent } from './servicios/servicios.component';
-import { ConfirmationService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-
 
 
 @NgModule({
@@ -16,7 +13,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     CommonModule,
     SharedModule,
     ServiciosRoutingModule,
-    ConfirmDialogModule
   ]
 })
 export class ServiciosModule { }

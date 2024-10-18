@@ -1,7 +1,6 @@
 <div class="container mx-auto">
     <h1 class="text-2xl font-semibold mb-4">Gestión de Servicios</h1>
   
-    <!-- Botón para agregar un nuevo servicio -->
     <div class="text-right mb-4">
       <button
         pButton
@@ -12,10 +11,9 @@
       ></button>
     </div>
   
-    <!-- Lista de Servicios -->
     <p-panel header="Servicios Activos" class="mb-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ng-container *ngFor="let service of services">
+        <ng-container *ngFor="let service of servicesAux">
           <div class="p-4 bg-white shadow-lg rounded-lg">
             <div class="flex justify-between items-center">
               <div>
@@ -26,7 +24,6 @@
             </div>
   
             <div class="mt-4 flex justify-end space-x-2">
-              <!-- Botón Editar -->
               <button
                 pButton
                 label="Editar"
@@ -34,8 +31,6 @@
                 class="p-button-warning"
                 (click)="openEditServiceModal(service)"
               ></button>
-  
-              <!-- Botón Eliminar -->
               <button
                 pButton
                 label="Eliminar"
@@ -48,13 +43,10 @@
         </ng-container>
       </div>
     </p-panel>
-  
-    <!-- Paginación -->
     <div class="text-center mt-4">
       <p-paginator [rows]="rows" [totalRecords]="totalRecords" (onPageChange)="loadServices($event)"></p-paginator>
     </div>
-  
-    <!-- Modal de Crear/Editar Servicio -->
+
     <p-dialog [(visible)]="serviceDialog" modal="true" [responsive]="true" [style]="{ width: '400px' }">
       <ng-template pTemplate="header">
         <h4>{{ editMode ? 'Editar Servicio' : 'Agregar Servicio' }}</h4>
@@ -68,7 +60,7 @@
           </div>
           <div class="field">
             <label for="description">Descripción</label>
-            <textarea id="description" rows="3" pInputTextarea [(ngModel)]="service.description"></textarea>
+            <textarea id="description" class="w-full" rows="3" pInputTextarea [(ngModel)]="service.description"></textarea>
           </div>
           <div class="field">
             <label for="price">Precio</label>
@@ -80,6 +72,20 @@
       <ng-template pTemplate="footer">
         <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
         <button pButton label="Guardar" icon="pi pi-check" class="p-button-primary" (click)="saveService()"></button>
+      </ng-template>
+    </p-dialog>
+    <p-dialog [(visible)]="deleteDialog" modal="true" [responsive]="true" [style]="{ width: '400px' }">
+      <ng-template pTemplate="header">
+        <h4 class="text-lg font-bold">Eliminar servicio</h4>
+      </ng-template>
+  
+      <ng-template pTemplate="content">
+        <h5>¿Estás seguro de que deseas eliminar el servicio {{service.name}}?</h5>
+      </ng-template>
+  
+      <ng-template pTemplate="footer">
+        <button pButton label="No" class="mr-3" severity="danger" [outlined]="true" (click)="hideDeleteDialog()"></button>
+        <button pButton label="Si" [outlined]="true" (click)="deleteService(service)"></button>
       </ng-template>
     </p-dialog>
   </div>

@@ -11,6 +11,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AppLayoutModule } from './pages/dashboard/layout/app.layout.module';
 import { ProductService } from './shared/services/product.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +24,7 @@ import { ProductService } from './shared/services/product.service';
     AngularFireModule.initializeApp(environment.firebase),
     ToastModule
   ],
-  providers: [MessageService, ProductService, ConfirmationService],
+  providers: [MessageService, ProductService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

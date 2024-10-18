@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-servicios',
@@ -13,15 +12,18 @@ export class ServiciosComponent {
     { id: 3, name: 'Masaje Relajante', description: 'Masaje de cuerpo completo', price: 50 },
   ];
 
-  serviceDialog = false; 
+  serviceDialog = false;
+  deleteDialog = false;
   editMode = false; 
   service = { id: null, name: '', description: '', price: null };
   rows = 5;
   totalRecords = 10;
+  servicesAux: any[];
 
-  constructor(private confirmationService: ConfirmationService) {}
+  constructor() {}
 
   ngOnInit(): void {
+    this.servicesAux = [ ...this.services ];
     this.loadServices({ first: 0, rows: this.rows });
   }
 
@@ -39,37 +41,38 @@ export class ServiciosComponent {
 
   saveService() {
     if (this.editMode) {
-      const index = this.services.findIndex(s => s.id === this.service.id);
-      this.services[index] = { ...this.service };
+      const index = this.servicesAux.findIndex(s => s.id === this.service.id);
+      this.servicesAux[index] = { ...this.service };
     } else {
-      this.service.id = this.services.length + 1;
-      this.services.push({ ...this.service });
+      this.service.id = this.servicesAux.length + 1;
+      this.servicesAux.push({ ...this.service });
     }
+    this.services = [ ...this.servicesAux ];
     this.serviceDialog = false;
   }
 
   confirmDeleteService(service: any) {
-    console.log('entraaaaa');
-    
-    this.confirmationService.confirm({
-      message: `¿Estás seguro de que deseas eliminar el servicio "${service.name}"?`,
-      accept: () => {
-        this.deleteService(service);
-      }
-    });
+    this.service = { ...service };
+    this.deleteDialog = true;
   }
 
   deleteService(service: any) {
-    this.services = this.services.filter(s => s.id !== service.id);
+    this.servicesAux = this.servicesAux.filter(s => s.id !== service.id);
+    this.services = [ ...this.servicesAux ];
+    this.deleteDialog = false;
   }
 
   hideDialog() {
     this.serviceDialog = false;
   }
 
+  hideDeleteDialog() {
+    this.deleteDialog = false;
+  }
+
   loadServices(event: any) {
     const start = event.first;
     const end = start + event.rows;
-    this.services = this.services.slice(start, end);
+    this.servicesAux = this.services.slice(start, end);
   }
 }
