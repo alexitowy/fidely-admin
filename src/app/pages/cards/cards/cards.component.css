@@ -1,0 +1,16 @@
+.container {
+    max-width: 1200px;
+  }
+  
+  .p-dialog {
+    width: 100% !important;
+  }
+  
+  .pi-circle-on {
+    color: #4caf50;
+  }
+  
+  .pi-circle-off {
+    color: #e0e0e0;
+  }
+  

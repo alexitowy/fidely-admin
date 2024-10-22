@@ -31,6 +31,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'cards',
+    component: AppLayoutComponent,
+    loadChildren: () =>
+      import('./pages/cards/cards.module').then(
+        (m) => m.CardsModule
+      ),
+  },
+  {
     path: 'auth',
     loadChildren: () =>
       import('./pages/login/login.module').then((m) => m.LoginModule),
