@@ -18,7 +18,6 @@ export class NotificacionesComponent {
       date: '2024-10-22T15:51:23.207Z',
       isNew: true,
       isRead: false,
-      showDetails: false,
       extraData: {},
     },
     {
@@ -31,7 +30,6 @@ export class NotificacionesComponent {
       date: '2024-10-16T15:51:23.207Z',
       isNew: false,
       isRead: true,
-      showDetails: false,
       extraData: {},
     },
   ];
@@ -47,7 +45,6 @@ export class NotificacionesComponent {
       date: '2024-10-15T15:51:23.207Z',
       isNew: false,
       isRead: true,
-      showDetails: false,
       extraData: {},
     },
     {
@@ -60,7 +57,6 @@ export class NotificacionesComponent {
       date: '2024-10-15T15:51:23.207Z',
       isNew: false,
       isRead: true,
-      showDetails: false,
       extraData: {},
     },
   ];
@@ -68,7 +64,7 @@ export class NotificacionesComponent {
   constructor(private readonly router: Router) { }
 
   markAsRead(notification: any): void {
-    notification.read = true;
+    notification.isRead = true;
   }
 
   timeAgo(date: string): string {
