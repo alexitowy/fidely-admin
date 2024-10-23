@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { EventService } from '../../../core/services/event.service';
 
 @Component({
   selector: 'app-servicios',
@@ -20,7 +21,7 @@ export class ServiciosComponent {
   totalRecords = 10;
   servicesAux: any[];
 
-  constructor() {}
+  constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
     this.servicesAux = [ ...this.services ];
@@ -43,9 +44,11 @@ export class ServiciosComponent {
     if (this.editMode) {
       const index = this.servicesAux.findIndex(s => s.id === this.service.id);
       this.servicesAux[index] = { ...this.service };
+      this.eventService.presentToastSuccess('Servicio actualizado correctamente.');
     } else {
       this.service.id = this.servicesAux.length + 1;
       this.servicesAux.push({ ...this.service });
+      this.eventService.presentToastSuccess('Servicio creado correctamente.');
     }
     this.services = [ ...this.servicesAux ];
     this.serviceDialog = false;
@@ -60,6 +63,7 @@ export class ServiciosComponent {
     this.servicesAux = this.servicesAux.filter(s => s.id !== service.id);
     this.services = [ ...this.servicesAux ];
     this.deleteDialog = false;
+    this.eventService.presentToastInfo(`Se ha eliminado el servicio ${service.name}`);
   }
 
   hideDialog() {

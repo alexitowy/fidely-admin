@@ -4,12 +4,12 @@
     <button pButton label="Crear Tarjeta" class="mb-4" icon="pi pi-plus" (click)="openNew()"></button>
   
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let card of cards" class="loyalty-card p-4 bg-white shadow rounded">
+      <div *ngFor="let card of cardsAux" class="loyalty-card p-4 bg-white shadow rounded">
         <div class="flex justify-between items-center mb-2">
           <h3 class="text-lg font-bold">{{ card.name }}</h3>
           <div class="flex space-x-2">
-            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-warning" (click)="editCard(card)"></button>
-            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteCard(card)"></button>
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined text-secondary" (click)="editCard(card)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded bg-primary border-primary-shade" (click)="confirmDeleteCard(card)"></button>
           </div>
         </div>
         <p class="mb-2">{{ card.description }}</p>
@@ -25,6 +25,9 @@
             </div>
           </div>
       </div>
+    </div>
+    <div class="text-center mt-4">
+      <p-paginator [rows]="rows" [totalRecords]="totalRecords" (onPageChange)="loadServices($event)"></p-paginator>
     </div>
   
     <p-dialog [(visible)]="cardDialog" modal="true" [responsive]="true" [style]="{ width: '90%' }">
@@ -58,6 +61,20 @@
           <button pButton label="Cancelar" icon="pi pi-times" severity="danger" [outlined]="true" (click)="hideDialog()"></button>
           <button pButton label="Guardar" icon="pi pi-check" [outlined]="true" class="m-0" (click)="saveCard()"></button>
         </div>
+      </ng-template>
+    </p-dialog>
+    <p-dialog [(visible)]="deleteDialog" modal="true" [responsive]="true">
+      <ng-template pTemplate="header">
+        <h4 class="text-lg font-bold">Eliminar tarjeta</h4>
+      </ng-template>
+  
+      <ng-template pTemplate="content">
+        <h5>¿Estás seguro de que deseas eliminar esta tarjeta?</h5>
+      </ng-template>
+  
+      <ng-template pTemplate="footer">
+        <button pButton label="No" class="mr-3" severity="danger" [outlined]="true" (click)="hideDeleteDialog()"></button>
+        <button pButton label="Si" [outlined]="true" (click)="deleteCard(card)"></button>
       </ng-template>
     </p-dialog>
   </div>
