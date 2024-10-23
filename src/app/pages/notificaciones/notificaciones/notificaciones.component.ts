@@ -69,7 +69,6 @@ export class NotificacionesComponent {
 
   markAsRead(notification: any): void {
     notification.read = true;
-    // Aquí puedes guardar el estado en tu base de datos si es necesario
   }
 
   timeAgo(date: string): string {
@@ -90,14 +89,9 @@ export class NotificacionesComponent {
   }
 
   redirectToAction(extraData: any): void {
-    // Aquí construyes la URL con el id de la tienda y los datos adicionales
-    const url = `/shop/?extraData=${encodeURIComponent(
+    /* const url = `/shop/?extraData=${encodeURIComponent(
       JSON.stringify(extraData)
     )}`;
-    this.router.navigateByUrl(url);
-  }
-
-  showDetails(notification: any): void {
-    notification.showDetails = !notification.showDetails;
+    this.router.navigateByUrl(url); */
   }
 }

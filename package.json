@@ -21,7 +21,6 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
-    "@angular/service-worker": "^17.3.0",
     "chart.js": "^4.4.4",
     "firebase": "^10.13.0",
     "ngx-image-compress": "^18.1.5",

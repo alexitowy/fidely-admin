@@ -25,13 +25,7 @@
             "inlineStyleLanguage": "css",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/manifest.webmanifest",
-              {
-                "glob": "firebase-messaging-sw.ts",
-                "input": "src/",
-                "output": "/"
-              }
+              "src/assets"
             ],
             "styles": [
               "src/styles.css",
@@ -61,8 +55,7 @@
                   "with": "src/environments/environment.pro.ts"
                 }
               ],
-              "outputHashing": "all",
-              "serviceWorker": "ngsw-config.json"
+              "outputHashing": "all"
             },
             "preProduction": {
               "budgets": [
@@ -119,8 +112,7 @@
             "inlineStyleLanguage": "css",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/manifest.webmanifest"
+              "src/assets"
             ],
             "styles": ["src/styles.css"],
             "scripts": []

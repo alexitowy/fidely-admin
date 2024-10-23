@@ -11,7 +11,6 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AppLayoutModule } from './pages/dashboard/layout/app.layout.module';
 import { ProductService } from './shared/services/product.service';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,13 +21,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     HttpClientModule,
     BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    ToastModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
+    ToastModule
   ],
   providers: [MessageService, ProductService],
   bootstrap: [AppComponent],
