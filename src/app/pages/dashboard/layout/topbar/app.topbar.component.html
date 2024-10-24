@@ -28,19 +28,12 @@
         layoutService.state.profileSidebarVisible
     }"
   >
-    <div class="layout-topbar-button justify-between btn-user">
-      <button class="p-link flex w-full p-3" routerLink="/dashboard/profile">
-        <i class="pi pi-user"></i>
-        <span>Perfil</span>
-      </button>
-      <button (click)="op.toggle($event)" class="p-link p-3">
-        <i
-          class="pi pi-bell text-xl text-color-secondary ml-2"
-          pBadge
-          value="2"
-        ></i>
-      </button>
-      <p-overlayPanel #op (onShow)="onShowOverlayPanel(op)" [style]="{ width: '90%' }">
+    <button class="p-link layout-topbar-button" routerLink="/dashboard/profile">
+      <i class="pi pi-user"></i>
+      <span>Perfil</span>
+    </button>
+    <button (click)="op.toggle($event)" class="p-link layout-topbar-button">
+      <p-overlayPanel #op [style]="{ width: '380px' }">
         <div class="flex align-items-center justify-between mb-4">
           <h5>Notifications</h5>
         </div>
@@ -68,7 +61,8 @@
             </div>
             <span class="text-700 line-height-3"
               >El empleado Henry ha vendido un total de:
-              <span class="text-blue-500 font-medium">500$</span> en este mes.</span
+              <span class="text-blue-500 font-medium">500$</span> en este
+              mes.</span
             >
           </li>
         </ul>
@@ -102,10 +96,18 @@
           </li>
         </ul>
         <div class="text-right mt-4">
-            <button pButton label="Ver más" icon="pi pi-angle-right" class="p-button-text" (click)="goToNotificationsPage(op)"></button>
-          </div>
+          <button
+            pButton
+            label="Ver más"
+            icon="pi pi-angle-right"
+            class="p-button-text"
+            (click)="goToNotificationsPage(op)"
+          ></button>
+        </div>
       </p-overlayPanel>
-    </div>
+      <i class="pi pi-bell text-color-secondary" pBadge value="2"></i>
+      <span>Notificaciones</span>
+    </button>
     <button class="p-link layout-topbar-button" (click)="signOut()">
       <i class="pi pi-sign-out"></i>
       <span>Cerrar sesión</span>

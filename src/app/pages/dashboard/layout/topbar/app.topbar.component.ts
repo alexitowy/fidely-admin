@@ -31,16 +31,6 @@ export class AppTopBarComponent {
         this.router.navigateByUrl('/auth');
     }
 
-    onShowOverlayPanel(overlayPanel: OverlayPanel) {
-        const element = overlayPanel.container as HTMLElement;
-        const rect = element.getBoundingClientRect();
-      
-        // Fijar la posición actual del overlay
-        element.style.position = 'fixed';
-        element.style.top = `${rect.top}px`;
-        element.style.left = `5%`;
-      }
-
       goToNotificationsPage(op: OverlayPanel){
         op.hide();
         this.router.navigateByUrl('/notificaciones');

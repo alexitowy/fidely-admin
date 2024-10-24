@@ -1,13 +1,8 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
-import { Product } from '../../../models/interfaces/product';
+import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { debounceTime, filter, Subscription } from 'rxjs';
-import { ProductService } from '../../../shared/services/product.service';
-import { AppSidebarComponent } from '../layout/sidebar/app.sidebar.component';
-import { AppTopBarComponent } from '../layout/topbar/app.topbar.component';
-import { NavigationEnd, Router } from '@angular/router';
-import { LayoutService } from '../layout/app.layout.service';
+import { debounceTime, Subscription } from 'rxjs';
 import { UtilsService } from '../../../core/services/utils.service';
+import { LayoutService } from '../layout/app.layout.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +12,36 @@ import { UtilsService } from '../../../core/services/utils.service';
 export class DashboardComponent {
   items!: MenuItem[];
 
-  products!: Product[];
+  products: any[] = [
+    {
+      name: 'Corte de Cabello Clásico',
+      price: 20.0,
+    },
+    {
+      name: 'Arreglo de Barba',
+      price: 15.0,
+    },
+    {
+      name: 'Afeitado Completo',
+      price: 25.0,
+    },
+    {
+      name: 'Corte y Estilo',
+      price: 30.0,
+    },
+    {
+      name: 'Aplicación de Aceite para Barba',
+      price: 10.0,
+    },
+    {
+      name: 'Facial para Hombres',
+      price: 40.0,
+    },
+    {
+      name: 'Combo Corte y Barba',
+      price: 45.0,
+    },
+  ];
 
   chartData: any;
 
@@ -26,7 +50,6 @@ export class DashboardComponent {
   subscription!: Subscription;
 
   constructor(
-    private productService: ProductService,
     public layoutService: LayoutService,
     public utilsService: UtilsService
   ) {
@@ -55,10 +78,10 @@ export class DashboardComponent {
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
     this.chartData = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
       datasets: [
         {
-          label: 'First Dataset',
+          label: 'Primer periodo',
           data: [65, 59, 80, 81, 56, 55, 40],
           fill: false,
           backgroundColor: documentStyle.getPropertyValue('--bluegray-700'),
@@ -66,7 +89,7 @@ export class DashboardComponent {
           tension: 0.4,
         },
         {
-          label: 'Second Dataset',
+          label: 'Segundo periodo',
           data: [28, 48, 40, 19, 86, 27, 90],
           fill: false,
           backgroundColor: documentStyle.getPropertyValue('--green-600'),

@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AppLayoutModule } from './pages/dashboard/layout/app.layout.module';
-import { ProductService } from './shared/services/product.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +22,7 @@ import { ProductService } from './shared/services/product.service';
     AngularFireModule.initializeApp(environment.firebase),
     ToastModule
   ],
-  providers: [MessageService, ProductService],
+  providers: [MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
